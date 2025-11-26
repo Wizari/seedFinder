@@ -7,7 +7,9 @@ data class ExecuteRequest(
     val lineBet: Int,
     val betType: Int,
     val risk: Boolean,
-    val gameState: Map<String, Any>?, // gameState как Map
+//    val gameState: Map<String, Any>?, // gameState как Map
+//    val gameState: Map<String, Any>?, // gameState как Map
+    val gameState: Any, // gameState как Map
     val demoId: Int,
     val demoSeed: Long
 )

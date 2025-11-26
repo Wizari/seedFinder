@@ -4,11 +4,15 @@ package com.bar.seedFinder.seedfinder
 import com.bar.seedFinder.client.ContentTypeInterceptor
 import com.bar.seedFinder.client.MathClient
 import com.bar.seedFinder.dto.ExecuteRequest
+import com.bar.seedFinder.dto.GameResponse
 import com.bar.seedFinder.dto.NewGameRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+
 
 @Component
 class SeedRunnerTwo(
@@ -43,11 +47,10 @@ class SeedRunnerTwo(
             // Выводим ответ в консоль как JSON строку
             println(objectMapper.writeValueAsString(newGameResponse))
 
-            var gameState = newGameResponse.result?.get("actions") as? Map<String, Any>
-//            if (gameState == null) {
-//                logger.error("Initial gameState is null after NewGame. Exiting.")
-//                return
-//            }
+//            var gameState = newGameResponse.result?.get("gameState") as? Map<String, Any>
+            var gameState = objectMapper.writeValueAsString(newGameResponse.result)
+            println("+++++++++++" + gameState)
+//            var actions = getFirstActionWithGson(newGameResponse.result.toString())
 
             // Шаг 2: GetConfig
             val configResponse = mathClient.getConfig()
@@ -57,13 +60,19 @@ class SeedRunnerTwo(
             // Извлекаем начальные параметры из configResponse БОЛЕЕ БЕЗОПАСНО
             val (denomination, linesAmount, betType) = extractConfigParameters(configResponse.result)
 
-            var actions = extractActions(gameState)
+//            var actions = extractActions(gameState)
+//            var actions = getFirstActionWithGson(newGameResponse.result.toString())
+            var actions = getFirstActionWithGson(objectMapper.writeValueAsString(newGameResponse))
+
+            println("1111*** " + actions)
+            var executeResponse: GameResponse? = null
             if (actions.isNullOrEmpty()) {
                 logger.warn("No initial actions found after NewGame. Exiting loop.")
             } else {
                 // Шаг 3: Выполняем действия циклически
                 while (!actions.isNullOrEmpty()) {
-                    val command = actions.firstOrNull()
+//                    val command = actions.firstOrNull()
+                    val command = actions
                     when (command) {
                         "Spin", "FreeSpin" -> {
                             logger.info("Executing command: $command")
@@ -74,17 +83,24 @@ class SeedRunnerTwo(
                                 lineBet = 2, // или извлекать из gameState, если меняется
                                 betType = betType,
                                 risk = false, // или извлекать из gameState/config
-                                gameState = gameState,
+//                                gameState = gameState,
+                                gameState = newGameResponse.result!!,
+//result                                gameState = objectMapper.writeValueAsString(newGameResponse.result),
                                 demoId = -1,
-                                demoSeed = -1L
+                                demoSeed = -1
                             )
-                            val executeResponse = mathClient.execute(executeRequest)
+                            executeResponse = mathClient.execute(executeRequest)
                             // Выводим ответ в консоль как JSON строку
                             println(objectMapper.writeValueAsString(executeResponse))
 
                             // Обновляем gameState и actions для следующей итерации
-                            gameState = executeResponse.result?.get("gameState") as? Map<String, Any>
-                            actions = extractActions(gameState)
+//                            gameState = executeResponse.result?.get("gameState") as? Map<String, Any>
+                            gameState = objectMapper.writeValueAsString(newGameResponse)
+//                            actions = getFirstActionWithGson(newGameResponse.result.toString())
+
+                            actions = getFirstActionWithGson(objectMapper.writeValueAsString(executeResponse))
+                            println("1111111111111" + actions)
+//                            actions = extractActions(gameState)
 
                         }
 
@@ -97,7 +113,8 @@ class SeedRunnerTwo(
                                 lineBet = 2,
                                 betType = betType,
                                 risk = false,
-                                gameState = gameState,
+                                gameState = executeResponse!!.result!!["gameState"]!!,
+//                                gameState = objectMapper.writeValueAsString(executeResponse!!.result),
                                 demoId = -1,
                                 demoSeed = -1L
                             )
@@ -163,5 +180,32 @@ class SeedRunnerTwo(
 
         logger.info("Extracted config: denomination=$denomination, lines=$linesAmount, betType=$betTypeId")
         return Triple(denomination, linesAmount, betTypeId)
+    }
+
+
+    fun getFirstActionWithGson(jsonString: String): String? {
+        return try {
+
+            val gson = Gson()
+            val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
+            val result = jsonObject.getAsJsonObject("result")
+
+            if (result.has("gameState")) {
+
+                val gameState = result.getAsJsonObject("gameState")
+                val public = gameState.getAsJsonObject("public")
+                val actions = public.getAsJsonArray("actions")
+
+                actions?.get(0)?.asString
+            } else {
+
+                val public = result.getAsJsonObject("public")
+                val actions = public.getAsJsonArray("actions")
+
+                actions?.get(0)?.asString
+            }
+        } catch (e: Exception) {
+            null
+        }
     }
 }
