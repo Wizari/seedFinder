@@ -3,9 +3,9 @@ package com.bar.seedFinder.seedfinder
 
 import com.bar.seedFinder.client.ContentTypeInterceptor
 import com.bar.seedFinder.client.MathClient
-import com.bar.seedFinder.dto.ExecuteRequest
-import com.bar.seedFinder.dto.GameResponse
+import com.bar.seedFinder.dto.FreeSpinRequest
 import com.bar.seedFinder.dto.NewGameRequest
+import com.bar.seedFinder.dto.SpinRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.gson.Gson
@@ -43,12 +43,12 @@ class SeedRunnerTwo(
             val newGameRequest = NewGameRequest("NewGame", seed)
             val newGameHeaders =
                 mapOf(ContentTypeInterceptor.CUSTOM_CONTENT_TYPE_HEADER to ContentTypeInterceptor.VND_API_JSON)
-            val newGameResponse = mathClient.newGame(newGameRequest)
+            var executeResponse = mathClient.newGame(newGameRequest)
             // Выводим ответ в консоль как JSON строку
-            println(objectMapper.writeValueAsString(newGameResponse))
+            println(objectMapper.writeValueAsString(executeResponse))
 
 //            var gameState = newGameResponse.result?.get("gameState") as? Map<String, Any>
-            var gameState = objectMapper.writeValueAsString(newGameResponse.result)
+            var gameState = objectMapper.writeValueAsString(executeResponse.result)
             println("+++++++++++" + gameState)
 //            var actions = getFirstActionWithGson(newGameResponse.result.toString())
 
@@ -62,10 +62,9 @@ class SeedRunnerTwo(
 
 //            var actions = extractActions(gameState)
 //            var actions = getFirstActionWithGson(newGameResponse.result.toString())
-            var actions = getFirstActionWithGson(objectMapper.writeValueAsString(newGameResponse))
+            var actions = getFirstActionWithGson(objectMapper.writeValueAsString(executeResponse))
 
             println("1111*** " + actions)
-            var executeResponse: GameResponse? = null
             if (actions.isNullOrEmpty()) {
                 logger.warn("No initial actions found after NewGame. Exiting loop.")
             } else {
@@ -74,9 +73,9 @@ class SeedRunnerTwo(
 //                    val command = actions.firstOrNull()
                     val command = actions
                     when (command) {
-                        "Spin", "FreeSpin" -> {
+                        "Spin" -> {
                             logger.info("Executing command: $command")
-                            val executeRequest = ExecuteRequest(
+                            val executeRequest = SpinRequest(
                                 command = command,
                                 denomination = denomination,
                                 lines = linesAmount,
@@ -84,29 +83,34 @@ class SeedRunnerTwo(
                                 betType = betType,
                                 risk = false, // или извлекать из gameState/config
 //                                gameState = gameState,
-                                gameState = newGameResponse.result!!,
+                                gameState = executeResponse.result!!,
 //result                                gameState = objectMapper.writeValueAsString(newGameResponse.result),
                                 demoId = -1,
                                 demoSeed = -1
                             )
                             executeResponse = mathClient.execute(executeRequest)
+                            println(objectMapper.writeValueAsString(executeResponse))
+                            actions = getFirstActionWithGson(objectMapper.writeValueAsString(executeResponse))
+                            println("NEXT ACTIONS ->>>>>>>>" + actions)
+                        }
+
+                        "FreeSpin" -> {
+                            logger.info("Executing command: $command")
+                            val executeRequest = FreeSpinRequest(
+                                command = command,
+                                risk = false, // или извлекать из gameState/config
+                                gameState = executeResponse!!.result!!["gameState"]!!,
+                            )
+                            executeResponse = mathClient.execute(executeRequest)
                             // Выводим ответ в консоль как JSON строку
                             println(objectMapper.writeValueAsString(executeResponse))
-
-                            // Обновляем gameState и actions для следующей итерации
-//                            gameState = executeResponse.result?.get("gameState") as? Map<String, Any>
-                            gameState = objectMapper.writeValueAsString(newGameResponse)
-//                            actions = getFirstActionWithGson(newGameResponse.result.toString())
-
                             actions = getFirstActionWithGson(objectMapper.writeValueAsString(executeResponse))
-                            println("1111111111111" + actions)
-//                            actions = extractActions(gameState)
-
+                            println("NEXT ACTIONS ->>>>>>>>" + actions)
                         }
 
                         "Close" -> {
                             logger.info("Executing command: $command")
-                            val executeRequest = ExecuteRequest(
+                            val executeRequest = SpinRequest(
                                 command = command,
                                 denomination = denomination,
                                 lines = linesAmount,

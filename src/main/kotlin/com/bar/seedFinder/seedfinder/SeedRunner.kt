@@ -2,8 +2,6 @@ package com.bar.seedFinder.seedfinder
 
 import com.bar.seedFinder.client.ContentTypeInterceptor
 import com.bar.seedFinder.client.MathClient
-import com.bar.seedFinder.dto.ExecuteRequest
-import com.bar.seedFinder.dto.GameState
 import com.bar.seedFinder.dto.NewGameRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

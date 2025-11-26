@@ -1,6 +1,6 @@
 package com.bar.seedFinder.dto
 
-data class ExecuteRequest(
+data class SpinRequest(
     val command: String,
     val denomination: Int,
     val lines: Int,

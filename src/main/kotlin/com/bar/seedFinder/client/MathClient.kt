@@ -19,7 +19,10 @@ interface MathClient {
     fun getConfig(): ConfigResponse
 
     @PostMapping("/RumblingRun-variation-95/execute")
-    fun execute(request: ExecuteRequest): GameResponse
+    fun execute(request: SpinRequest): GameResponse
+
+    @PostMapping("/RumblingRun-variation-95/execute")
+    fun execute(request: FreeSpinRequest): GameResponse
 }
 
 //import com.bar.seedFinder.dto.*

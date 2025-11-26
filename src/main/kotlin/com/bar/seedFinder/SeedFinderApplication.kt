@@ -16,7 +16,8 @@ fun main(args: Array<String>) {
 
     val seedRunner = application.getBean<SeedRunnerTwo>()
 //    seedRunner.sayHello()
-    val argsArr : Array<String> = arrayOf("17179869625")
+//    val argsArr : Array<String> = arrayOf("17179869625")
+    val argsArr : Array<String> = arrayOf("623927852")
 
     seedRunner.run(argsArr)
 }
