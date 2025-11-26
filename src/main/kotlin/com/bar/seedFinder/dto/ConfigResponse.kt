@@ -1,8 +1,7 @@
 package com.bar.seedFinder.dto
 
 data class ConfigResponse(
-    val result: ConfigResult? = null
-    // Добавьте другие поля если нужно
+    val result: Map<String, Any>? = null // Упрощаем, используем Map
 )
 
 data class ConfigResult(

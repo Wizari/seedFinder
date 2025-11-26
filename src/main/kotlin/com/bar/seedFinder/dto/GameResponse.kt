@@ -3,7 +3,7 @@ package com.bar.seedFinder.dto
 
 // Используется как для NewGame, так и для Execute
 data class GameResponse(
-    val result: GameResult? = null
+    val result: Map<String, Any>? = null // Упрощаем, используем Map
 )
 
 data class GameResult(
