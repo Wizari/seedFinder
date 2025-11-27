@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.gmail.wizaripost.seedFinder.client.MathClient
 import com.gmail.wizaripost.seedFinder.dto.ConfigResponse
 import com.gmail.wizaripost.seedFinder.dto.GameResponse
+import com.gmail.wizaripost.seedFinder.service.actions.FreeSpinService
 import com.gmail.wizaripost.seedFinder.service.actions.NewGameService
 import com.gmail.wizaripost.seedFinder.service.actions.SpinService
 import com.google.gson.Gson
@@ -20,11 +21,14 @@ class SeedRunner(
     private val mathClient: MathClient,
     private val newGameService: NewGameService,
     private val spinService: SpinService,
+    private val freeSpinService: FreeSpinService,
 
     ) {
 
     private val logger = LoggerFactory.getLogger(SeedRunner::class.java)
     private val objectMapper: ObjectMapper = jacksonObjectMapper()
+    var response: String = ""
+    var spinResponse: GameResponse? = null
 
     fun run(seed: ULong) {
 
@@ -32,15 +36,15 @@ class SeedRunner(
         try {
             // Шаг 1: NewGame
             val gameId = "RumblingRun-variation-95"
-            var responseNewGameService = newGameService.execute(gameId, seed)
-            var newGameResponse: GameResponse = objectMapper.readValue(responseNewGameService)
+            response = newGameService.execute(gameId, seed)
+            var newGameResponse: GameResponse = objectMapper.readValue(response)
 
             println("+++++++++++ NewGame.run:" + newGameResponse)
 
             // Шаг 2: GetConfig
 
-            val responceConfig = mathClient.getConfig(gameId)
-            val configResponse: ConfigResponse = objectMapper.readValue(responceConfig)
+            response = mathClient.getConfig(gameId)
+            val configResponse: ConfigResponse = objectMapper.readValue(response)
 
             // Выводим ответ в консоль как JSON строку
             println(objectMapper.writeValueAsString(configResponse))
@@ -67,27 +71,24 @@ class SeedRunner(
                         "Spin" -> {
                             logger.info("Executing command: $command")
 
-                            var responseSpinService = spinService.execute(gameId, newGameResponse)
-                            var gameResponse: GameResponse = objectMapper.readValue(responseSpinService)
+                            response = spinService.execute(gameId, newGameResponse)
+                            spinResponse = objectMapper.readValue(response)
+
+                            println(objectMapper.writeValueAsString(spinResponse))
+                            actions = getFirstActionWithGson(objectMapper.writeValueAsString(spinResponse))
+                            println("NEXT ACTIONS ->>>>>>>>" + actions)
+                        }
+
+                        "FreeSpin" -> {
+                            logger.info("Executing command: $command")
+
+                            response = freeSpinService.execute(gameId, spinResponse)
+                            var gameResponse: GameResponse = objectMapper.readValue(response)
 
                             println(objectMapper.writeValueAsString(gameResponse))
                             actions = getFirstActionWithGson(objectMapper.writeValueAsString(gameResponse))
                             println("NEXT ACTIONS ->>>>>>>>" + actions)
                         }
-
-//                        "FreeSpin" -> {
-//                            logger.info("Executing command: $command")
-//                            val executeRequest = FreeSpinRequest(
-//                                command = command,
-//                                risk = false, // или извлекать из gameState/config
-//                                gameState = executeResponse!!.result!!["gameState"]!!,
-//                            )
-//                            executeResponse = mathClient.executeSpin(executeRequest)
-//                            // Выводим ответ в консоль как JSON строку
-//                            println(objectMapper.writeValueAsString(executeResponse))
-//                            actions = getFirstActionWithGson(objectMapper.writeValueAsString(executeResponse))
-//                            println("NEXT ACTIONS ->>>>>>>>" + actions)
-//                        }
 //
 //                        "Close" -> {
 //                            logger.info("Executing command: $command")
