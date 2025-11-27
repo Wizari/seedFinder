@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.gmail.wizaripost.seedFinder.client.MathClient
 import com.gmail.wizaripost.seedFinder.dto.ConfigResponse
 import com.gmail.wizaripost.seedFinder.dto.GameResponse
+import com.gmail.wizaripost.seedFinder.service.ResultPostProcessor
 import com.gmail.wizaripost.seedFinder.service.actions.CloseService
 import com.gmail.wizaripost.seedFinder.service.actions.FreeSpinService
 import com.gmail.wizaripost.seedFinder.service.actions.NewGameService
@@ -24,6 +25,7 @@ class SeedRunner(
     private val spinService: SpinService,
     private val freeSpinService: FreeSpinService,
     private val closeService: CloseService,
+    private val resultPostProcessor: ResultPostProcessor
 
     ) {
 
@@ -37,7 +39,7 @@ class SeedRunner(
         val responseNewGameString = newGameService.execute(gameId, seed)
         val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
 
-        println("+++++++++++ NewGame.run:" + newGameResponse)
+        resultPostProcessor.process("+++++++++++ NewGame.run:", newGameResponse)
 
         var action: String = getFirstActionWithGson(responseNewGameString)
         println("1111*** " + action)
