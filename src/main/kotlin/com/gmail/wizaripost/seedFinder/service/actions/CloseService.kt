@@ -15,11 +15,9 @@ class CloseService(
 ) {
 
     fun execute(gameId: String, configResponse: GameResponse?): String {
-        val test = configResponse!!.result!!["gameState"]!!
-        println(test)
         val executeRequest = CloseRequest(
             command = "Close",
-            gameState = configResponse.result!!["gameState"]!!,
+            gameState = configResponse!!.result!!["gameState"]!!,
         )
         return mathClient.executeClose(gameId, executeRequest)
     }

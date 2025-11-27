@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 @Service
 class ResultPostProcessorImpl : ResultPostProcessor {
     override fun process(key: String, payload: Any) {
-        println("$key >>> $payload")
+        println(">>>>>>>>>>>>>>>>>>>>>>>>  $key: ")
+        println(payload)
     }
 }

@@ -12,8 +12,7 @@ class NewGameService(
 
     fun execute(gameId: String, seed: ULong): String {
         val newGameRequest = NewGameRequest("NewGame", seed)
-        var executeResponse = mathClient.newGame(gameId, newGameRequest)
-        println(executeResponse)
+        val executeResponse = mathClient.newGame(gameId, newGameRequest)
         return executeResponse
     }
 

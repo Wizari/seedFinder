@@ -12,8 +12,6 @@ import com.gmail.wizaripost.seedFinder.service.actions.CloseService
 import com.gmail.wizaripost.seedFinder.service.actions.FreeSpinService
 import com.gmail.wizaripost.seedFinder.service.actions.NewGameService
 import com.gmail.wizaripost.seedFinder.service.actions.SpinService
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
@@ -27,7 +25,7 @@ class SeedRunner(
     private val closeService: CloseService,
     private val resultPostProcessor: ResultPostProcessor
 
-    ) {
+) {
 
     private val logger = LoggerFactory.getLogger(SeedRunner::class.java)
     private val objectMapper: ObjectMapper = jacksonObjectMapper()
@@ -39,17 +37,15 @@ class SeedRunner(
         val responseNewGameString = newGameService.execute(gameId, seed)
         val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
 
-        resultPostProcessor.process("+++++++++++ NewGame.run:", newGameResponse)
-
+        resultPostProcessor.process("NewGame", newGameResponse)
         var action: String = getFirstActionWithGson(responseNewGameString)
-        println("1111*** " + action)
+        logger.info("Executing command: $action")
 
         // Шаг 2: GetConfig
         val responseGetConfigString = mathClient.getConfig(gameId)
         val configResponse: ConfigResponse = objectMapper.readValue(responseGetConfigString)
+        resultPostProcessor.process("GetConfig", configResponse)
 
-        // Выводим ответ в консоль как JSON строку
-        println(objectMapper.writeValueAsString(configResponse))
 
         do {
             when (action) {
@@ -58,11 +54,11 @@ class SeedRunner(
 
                     val responseString = spinService.execute(gameId, newGameResponse)
                     response = objectMapper.readValue(responseString)
+                    resultPostProcessor.process("Spin", responseString)
 
-                    println(objectMapper.writeValueAsString(response))
-//                        action = getFirstActionWithGson(objectMapper.writeValueAsString(response))
                     action = getFirstActionWithGson(responseString)
-                    println("NEXT ACTIONS ->>>>>>>>" + action)
+                    logger.info("->> NEXT ACTIONS: $action")
+
                 }
 
                 "FreeSpin" -> {
@@ -70,10 +66,10 @@ class SeedRunner(
 
                     val responseString = freeSpinService.execute(gameId, response)
                     response = objectMapper.readValue(responseString)
+                    resultPostProcessor.process("FreeSpin", responseString)
 
-                    println(objectMapper.writeValueAsString(response))
-                    action = getFirstActionWithGson(objectMapper.writeValueAsString(response))
-                    println("NEXT ACTIONS ->>>>>>>>" + action)
+                    action = getFirstActionWithGson(responseString)
+                    logger.info("->> NEXT ACTIONS: $action")
                 }
 
                 "Close" -> {
@@ -82,9 +78,10 @@ class SeedRunner(
                     val responseString = closeService.execute(gameId, response)
                     response = objectMapper.readValue(responseString)
 
-                    println(objectMapper.writeValueAsString(response))
-                    action = getFirstActionWithGson(objectMapper.writeValueAsString(response))
-                    println("NEXT ACTIONS ->>>>>>>>" + action)
+                    resultPostProcessor.process("Close", responseString)
+
+                    action = getFirstActionWithGson(responseString)
+                    logger.info("->> NEXT ACTIONS: $action")
 
                     // После Close завершаем цикл
                     logger.info("Close command executed, ending game round.")
@@ -96,25 +93,24 @@ class SeedRunner(
     }
 
     fun getFirstActionWithGson(jsonString: String): String {
+        val objectMapper = ObjectMapper()
+        val jsonNode = objectMapper.readTree(jsonString)
 
-        val gson = Gson()
-        val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
-        val result = jsonObject.getAsJsonObject("result")
+        val result = jsonNode.get("result")
 
         val action: String? = if (result.has("gameState")) {
+            val gameState = result.get("gameState")
+            val public = gameState.get("public")
+            val actions = public.get("actions")
 
-            val gameState = result.getAsJsonObject("gameState")
-            val public = gameState.getAsJsonObject("public")
-            val actions = public.getAsJsonArray("actions")
-
-            actions?.get(0)?.asString
+            actions?.get(0)?.asText()
         } else {
+            val public = result.get("public")
+            val actions = public.get("actions")
 
-            val public = result.getAsJsonObject("public")
-            val actions = public.getAsJsonArray("actions")
-
-            actions?.get(0)?.asString
+            actions?.get(0)?.asText()
         }
+
         if (action.isNullOrEmpty()) {
             throw Exception("No actions were found")
         }

@@ -13,8 +13,6 @@ class SpinService(
     private val extractConfigParameters: ExtractConfigParameters,
     private val mathClient: MathClient,
 ) {
-    private val objectMapper: ObjectMapper = jacksonObjectMapper()
-
 
     fun execute(gameId: String, configResponse: GameResponse): String {
         val (denomination, linesAmount, betType) = extractConfigParameters.extractTriple(configResponse.result)

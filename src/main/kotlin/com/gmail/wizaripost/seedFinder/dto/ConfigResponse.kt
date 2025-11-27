@@ -1,7 +1,7 @@
 package com.gmail.wizaripost.seedFinder.dto
 
 data class ConfigResponse(
-    val result: Map<String, Any>? = null // Упрощаем, используем Map
+        val result: Map<String, Any>? = null // Упрощаем, используем Map
 )
 
 data class ConfigResult(

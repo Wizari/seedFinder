@@ -14,12 +14,10 @@ class FreeSpinService(
 ) {
 
     fun execute(gameId: String, configResponse: GameResponse?): String {
-        val test = configResponse!!.result!!["gameState"]!!
-        println(test)
         val executeRequest = FreeSpinRequest(
             command = "FreeSpin",
             risk = false, // или извлекать из gameState/config
-            gameState = configResponse.result!!["gameState"]!!,
+            gameState = configResponse!!.result!!["gameState"]!!,
         )
         return mathClient.executeFreeSpin(gameId, executeRequest)
     }
