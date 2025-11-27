@@ -1,32 +1,39 @@
 package com.gmail.wizaripost.seedFinder.client
 
 
-import com.gmail.wizaripost.seedFinder.dto.ConfigResponse
 import com.gmail.wizaripost.seedFinder.dto.FreeSpinRequest
-import com.gmail.wizaripost.seedFinder.dto.GameResponse
 import com.gmail.wizaripost.seedFinder.dto.NewGameRequest
 import com.gmail.wizaripost.seedFinder.dto.SpinRequest
 import org.springframework.cloud.openfeign.FeignClient
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 
 @FeignClient(
     name = "MathClient",
     url = "http://localhost:8012"
-    // Убрали configuration = [ContentTypeInterceptor::class]
 )
 interface MathClient {
 
-    @PostMapping("/RumblingRun-variation-95/newGame")
-    fun newGame(request: NewGameRequest): GameResponse // Убрали @HeaderMap
+    @PostMapping("/{gameName}/newGame")
+    fun newGame(
+        @PathVariable gameName: String,
+        request: NewGameRequest
+    ): String
 
-    @PostMapping("/RumblingRun-variation-95/getConfig")
-    fun getConfig(): ConfigResponse
+    @PostMapping("/{gameName}/getConfig")
+    fun getConfig(@PathVariable gameName: String): String
 
-    @PostMapping("/RumblingRun-variation-95/execute")
-    fun execute(request: SpinRequest): GameResponse
+    @PostMapping("/{gameName}/execute")
+    fun executeSpin(
+        @PathVariable gameName: String,
+        request: SpinRequest
+    ): String
 
-    @PostMapping("/RumblingRun-variation-95/execute")
-    fun execute(request: FreeSpinRequest): GameResponse
+    @PostMapping("/{gameName}/execute")
+    fun executeFreeSpin(
+        @PathVariable gameName: String,
+        request: FreeSpinRequest
+    ): String
 }
 
 //import com.bar.seedFinder.dto.*
