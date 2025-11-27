@@ -1,8 +1,8 @@
-package com.bar.seedFinder.seedfinder
+package com.gmail.wizaripost.seedFinder.seedfinder
 
-import com.bar.seedFinder.client.ContentTypeInterceptor
-import com.bar.seedFinder.client.MathClient
-import com.bar.seedFinder.dto.NewGameRequest
+import com.gmail.wizaripost.seedFinder.client.ContentTypeInterceptor
+import com.gmail.wizaripost.seedFinder.client.MathClient
+import com.gmail.wizaripost.seedFinder.dto.NewGameRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.slf4j.LoggerFactory

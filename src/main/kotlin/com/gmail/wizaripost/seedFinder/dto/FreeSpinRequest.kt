@@ -1,4 +1,4 @@
-package com.bar.seedFinder.dto
+package com.gmail.wizaripost.seedFinder.dto
 
 data class FreeSpinRequest(
     val command: String,

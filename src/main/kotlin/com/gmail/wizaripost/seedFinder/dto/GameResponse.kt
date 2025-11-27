@@ -1,4 +1,4 @@
-package com.bar.seedFinder.dto
+package com.gmail.wizaripost.seedFinder.dto
 
 
 // Используется как для NewGame, так и для Execute

@@ -1,6 +1,6 @@
-package com.bar.seedFinder
+package com.gmail.wizaripost.seedFinder
 
-import com.bar.seedFinder.seedfinder.SeedRunnerTwo
+import com.gmail.wizaripost.seedFinder.seedfinder.SeedRunnerTwo
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -20,4 +20,5 @@ fun main(args: Array<String>) {
     val argsArr : Array<String> = arrayOf("623927852")
 
     seedRunner.run(argsArr)
+//    seedRunner.run(args)
 }

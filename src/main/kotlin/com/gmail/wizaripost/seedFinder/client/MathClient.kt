@@ -1,7 +1,11 @@
-package com.bar.seedFinder.client
+package com.gmail.wizaripost.seedFinder.client
 
 
-import com.bar.seedFinder.dto.*
+import com.gmail.wizaripost.seedFinder.dto.ConfigResponse
+import com.gmail.wizaripost.seedFinder.dto.FreeSpinRequest
+import com.gmail.wizaripost.seedFinder.dto.GameResponse
+import com.gmail.wizaripost.seedFinder.dto.NewGameRequest
+import com.gmail.wizaripost.seedFinder.dto.SpinRequest
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.PostMapping
 

@@ -1,11 +1,11 @@
-package com.bar.seedFinder.seedfinder
+package com.gmail.wizaripost.seedFinder.seedfinder
 
 
-import com.bar.seedFinder.client.ContentTypeInterceptor
-import com.bar.seedFinder.client.MathClient
-import com.bar.seedFinder.dto.FreeSpinRequest
-import com.bar.seedFinder.dto.NewGameRequest
-import com.bar.seedFinder.dto.SpinRequest
+import com.gmail.wizaripost.seedFinder.client.ContentTypeInterceptor
+import com.gmail.wizaripost.seedFinder.client.MathClient
+import com.gmail.wizaripost.seedFinder.dto.FreeSpinRequest
+import com.gmail.wizaripost.seedFinder.dto.NewGameRequest
+import com.gmail.wizaripost.seedFinder.dto.SpinRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.gson.Gson

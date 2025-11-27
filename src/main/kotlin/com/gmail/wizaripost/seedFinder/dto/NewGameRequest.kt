@@ -1,4 +1,4 @@
-package com.bar.seedFinder.dto
+package com.gmail.wizaripost.seedFinder.dto
 
 data class NewGameRequest(
     val command: String,
