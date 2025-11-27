@@ -11,18 +11,10 @@ class NewGame(
 ) {
 
     fun run(seed: ULong): GameResponse {
-        // Шаг 1: NewGame
         val newGameRequest = NewGameRequest("NewGame", seed)
-//        val newGameHeaders =
-//            mapOf(ContentTypeInterceptor.CUSTOM_CONTENT_TYPE_HEADER to ContentTypeInterceptor.VND_API_JSON)
         var executeResponse = mathClient.newGame(newGameRequest)
-        // Выводим ответ в консоль как JSON строку
-//        println(objectMapper.writeValueAsString(executeResponse))
         println(executeResponse)
         return executeResponse
-//            var gameState = newGameResponse.result?.get("gameState") as? Map<String, Any>
-//            var gameState = objectMapper.writeValueAsString(executeResponse.result)
-//            println("+++++++++++" + gameState)
     }
 
 
