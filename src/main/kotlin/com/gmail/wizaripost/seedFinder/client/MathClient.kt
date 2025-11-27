@@ -1,6 +1,7 @@
 package com.gmail.wizaripost.seedFinder.client
 
 
+import com.gmail.wizaripost.seedFinder.dto.CloseRequest
 import com.gmail.wizaripost.seedFinder.dto.FreeSpinRequest
 import com.gmail.wizaripost.seedFinder.dto.NewGameRequest
 import com.gmail.wizaripost.seedFinder.dto.SpinRequest
@@ -33,6 +34,12 @@ interface MathClient {
     fun executeFreeSpin(
         @PathVariable gameName: String,
         request: FreeSpinRequest
+    ): String
+
+    @PostMapping("/{gameName}/execute")
+    fun executeClose(
+        @PathVariable gameName: String,
+        request: CloseRequest
     ): String
 }
 

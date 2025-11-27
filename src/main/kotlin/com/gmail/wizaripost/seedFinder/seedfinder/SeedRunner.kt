@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.gmail.wizaripost.seedFinder.client.MathClient
 import com.gmail.wizaripost.seedFinder.dto.ConfigResponse
 import com.gmail.wizaripost.seedFinder.dto.GameResponse
+import com.gmail.wizaripost.seedFinder.service.actions.CloseService
 import com.gmail.wizaripost.seedFinder.service.actions.FreeSpinService
 import com.gmail.wizaripost.seedFinder.service.actions.NewGameService
 import com.gmail.wizaripost.seedFinder.service.actions.SpinService
@@ -22,170 +23,99 @@ class SeedRunner(
     private val newGameService: NewGameService,
     private val spinService: SpinService,
     private val freeSpinService: FreeSpinService,
+    private val closeService: CloseService,
 
     ) {
 
     private val logger = LoggerFactory.getLogger(SeedRunner::class.java)
     private val objectMapper: ObjectMapper = jacksonObjectMapper()
-    var response: String = ""
-    var spinResponse: GameResponse? = null
+    var response: GameResponse? = null
 
     fun run(seed: ULong) {
+        // Шаг 1: NewGame
+        val gameId = "RumblingRun-variation-95"
+        val responseNewGameString = newGameService.execute(gameId, seed)
+        val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
 
+        println("+++++++++++ NewGame.run:" + newGameResponse)
 
-        try {
-            // Шаг 1: NewGame
-            val gameId = "RumblingRun-variation-95"
-            response = newGameService.execute(gameId, seed)
-            var newGameResponse: GameResponse = objectMapper.readValue(response)
+        var action: String = getFirstActionWithGson(responseNewGameString)
+        println("1111*** " + action)
 
-            println("+++++++++++ NewGame.run:" + newGameResponse)
+        // Шаг 2: GetConfig
+        val responseGetConfigString = mathClient.getConfig(gameId)
+        val configResponse: ConfigResponse = objectMapper.readValue(responseGetConfigString)
 
-            // Шаг 2: GetConfig
+        // Выводим ответ в консоль как JSON строку
+        println(objectMapper.writeValueAsString(configResponse))
 
-            response = mathClient.getConfig(gameId)
-            val configResponse: ConfigResponse = objectMapper.readValue(response)
+        do {
+            when (action) {
+                "Spin" -> {
+                    logger.info("Executing command: $action")
 
-            // Выводим ответ в консоль как JSON строку
-            println(objectMapper.writeValueAsString(configResponse))
+                    val responseString = spinService.execute(gameId, newGameResponse)
+                    response = objectMapper.readValue(responseString)
 
-            // Извлекаем начальные параметры из configResponse БОЛЕЕ БЕЗОПАСНО
-//            val (denomination, linesAmount, betType) = extractConfigParameters(configResponse.result)
-//            val configResponse: ConfigResponse = objectMapper.readValue(jsonString)
+                    println(objectMapper.writeValueAsString(response))
+//                        action = getFirstActionWithGson(objectMapper.writeValueAsString(response))
+                    action = getFirstActionWithGson(responseString)
+                    println("NEXT ACTIONS ->>>>>>>>" + action)
+                }
 
-//            val (denomination, linesAmount, betType) = extractConfigParameters(objectMapper.writeValue(configResponse, ConfigResponse))
+                "FreeSpin" -> {
+                    logger.info("Executing command: $action")
 
-            var actions = getFirstActionWithGson(objectMapper.writeValueAsString(newGameResponse))
+                    val responseString = freeSpinService.execute(gameId, response)
+                    response = objectMapper.readValue(responseString)
 
-            println("1111*** " + actions)
-            if (actions.isNullOrEmpty()) {
-                logger.warn("No initial actions found after NewGame. Exiting loop.")
+                    println(objectMapper.writeValueAsString(response))
+                    action = getFirstActionWithGson(objectMapper.writeValueAsString(response))
+                    println("NEXT ACTIONS ->>>>>>>>" + action)
+                }
 
+                "Close" -> {
+                    logger.info("Executing command: $action")
 
-            } else {
-                // Шаг 3: Выполняем действия циклически
-                while (!actions.isNullOrEmpty()) {
-//                    val command = actions.firstOrNull()
-                    val command = actions
-                    when (command) {
-                        "Spin" -> {
-                            logger.info("Executing command: $command")
+                    val responseString = closeService.execute(gameId, response)
+                    response = objectMapper.readValue(responseString)
 
-                            response = spinService.execute(gameId, newGameResponse)
-                            spinResponse = objectMapper.readValue(response)
+                    println(objectMapper.writeValueAsString(response))
+                    action = getFirstActionWithGson(objectMapper.writeValueAsString(response))
+                    println("NEXT ACTIONS ->>>>>>>>" + action)
 
-                            println(objectMapper.writeValueAsString(spinResponse))
-                            actions = getFirstActionWithGson(objectMapper.writeValueAsString(spinResponse))
-                            println("NEXT ACTIONS ->>>>>>>>" + actions)
-                        }
-
-                        "FreeSpin" -> {
-                            logger.info("Executing command: $command")
-
-                            response = freeSpinService.execute(gameId, spinResponse)
-                            var gameResponse: GameResponse = objectMapper.readValue(response)
-
-                            println(objectMapper.writeValueAsString(gameResponse))
-                            actions = getFirstActionWithGson(objectMapper.writeValueAsString(gameResponse))
-                            println("NEXT ACTIONS ->>>>>>>>" + actions)
-                        }
-//
-//                        "Close" -> {
-//                            logger.info("Executing command: $command")
-//                            val executeRequest = SpinRequest(
-//                                command = command,
-//                                denomination = denomination,
-//                                lines = linesAmount,
-//                                lineBet = 2,
-//                                betType = betType,
-//                                risk = false,
-//                                gameState = executeResponse!!.result!!["gameState"]!!,
-////                                gameState = objectMapper.writeValueAsString(executeResponse!!.result),
-//                                demoId = -1,
-//                                demoSeed = -1L
-//                            )
-//                            val executeResponse = mathClient.executeSpin(executeRequest)
-//                            // Выводим ответ в консоль как JSON строку
-//                            println(objectMapper.writeValueAsString(executeResponse))
-//
-//                            // После Close завершаем цикл
-//                            logger.info("Close command executed, ending game round.")
-//                            break
-//                        }
-
-                        else -> {
-                            logger.warn("Unknown action: $command. Exiting loop.")
-                            break
-                        }
-                    }
+                    // После Close завершаем цикл
+                    logger.info("Close command executed, ending game round.")
                 }
             }
 
-            logger.info("Game round completed for seed: $seed")
-
-        } catch (e: Exception) {
-            logger.error("Error running game round with seed $seed: ${e.message}", e)
-        }
+        } while (action != "Spin")
+        logger.info("Game round completed for seed: $seed")
     }
 
-//    // ИСПРАВЛЕННАЯ функция извлечения параметров из GetConfig
-//    private fun extractConfigParameters(configResult: Map<String, Any>?): Triple<Int, Int, Int> {
-//        // Извлекаем ModelCore
-//        val modelCore = configResult?.get("ModelCore") as? Map<String, Any>
-//        if (modelCore == null) {
-//            logger.warn("ModelCore not found in config. Using defaults.")
-//            return Triple(1, 243, 0)
-//        }
-//
-//        // Извлекаем lstLAD (предполагаем, что это список объектов)
-//        val lstLAD = modelCore["lstLAD"] as? List<*>
-//        val firstLAD = lstLAD?.firstOrNull() as? Map<String, Any>
-//        val denomination = firstLAD?.get("dnm") as? Int ?: run {
-//            logger.warn("Denomination not found in lstLAD[0]. Using default 1.")
-//            1
-//        }
-//        val linesList = firstLAD?.get("lstLA") as? List<*>
-//        val linesAmount = linesList?.firstOrNull() as? Int ?: run {
-//            logger.warn("Lines amount not found in lstLAD[0].lstLA. Using default 243.")
-//            243
-//        }
-//
-//        // Извлекаем betTypes (предполагаем, что это список объектов)
-//        val betTypes = modelCore["betTypes"] as? List<*>
-//        val firstBetType = betTypes?.firstOrNull() as? Map<String, Any>
-//        val betTypeId = firstBetType?.get("id") as? Int ?: run {
-//            logger.warn("Bet type ID not found in betTypes[0]. Using default 0.")
-//            0
-//        }
-//
-//        logger.info("Extracted config: denomination=$denomination, lines=$linesAmount, betType=$betTypeId")
-//        return Triple(denomination, linesAmount, betTypeId)
-//    }
+    fun getFirstActionWithGson(jsonString: String): String {
 
+        val gson = Gson()
+        val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
+        val result = jsonObject.getAsJsonObject("result")
 
-    fun getFirstActionWithGson(jsonString: String): String? {
-        return try {
+        val action: String? = if (result.has("gameState")) {
 
-            val gson = Gson()
-            val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
-            val result = jsonObject.getAsJsonObject("result")
+            val gameState = result.getAsJsonObject("gameState")
+            val public = gameState.getAsJsonObject("public")
+            val actions = public.getAsJsonArray("actions")
 
-            if (result.has("gameState")) {
+            actions?.get(0)?.asString
+        } else {
 
-                val gameState = result.getAsJsonObject("gameState")
-                val public = gameState.getAsJsonObject("public")
-                val actions = public.getAsJsonArray("actions")
+            val public = result.getAsJsonObject("public")
+            val actions = public.getAsJsonArray("actions")
 
-                actions?.get(0)?.asString
-            } else {
-
-                val public = result.getAsJsonObject("public")
-                val actions = public.getAsJsonArray("actions")
-
-                actions?.get(0)?.asString
-            }
-        } catch (e: Exception) {
-            null
+            actions?.get(0)?.asString
         }
+        if (action.isNullOrEmpty()) {
+            throw Exception("No actions were found")
+        }
+        return action
     }
 }
