@@ -8,6 +8,7 @@ import com.gmail.wizaripost.seedFinder.dto.ConfigResponse
 import com.gmail.wizaripost.seedFinder.dto.GameResponse
 import com.gmail.wizaripost.seedFinder.service.ResultPostProcessor
 import com.gmail.wizaripost.seedFinder.service.actions.NewGameService
+import com.gmail.wizaripost.seedFinder.service.stages.ActionBuilder
 import com.gmail.wizaripost.seedFinder.service.stages.RoundStage
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -19,8 +20,9 @@ class SeedRunner(
     private val newGameService: NewGameService,
     private val resultPostProcessor: ResultPostProcessor,
     private val objectMapper: ObjectMapper,
-    private val roundStage: Set<RoundStage>
-) {
+    private val roundStage: Set<RoundStage>,
+    private val actionBuilder: ActionBuilder,
+    ) {
 
     private val logger = LoggerFactory.getLogger(SeedRunner::class.java)
 
@@ -35,7 +37,7 @@ class SeedRunner(
         val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
 
 //        resultPostProcessor.process("NewGame", newGameResponse)
-        var action: String = getFirstAction(responseNewGameString)
+        var action: String = actionBuilder.getFirstAction(responseNewGameString)
 //        logger.info("Executing command: $action")
         response = newGameResponse
 
@@ -57,28 +59,4 @@ class SeedRunner(
         logger.info("Game round completed for seed: $seed")
     }
 
-    fun getFirstAction(jsonString: String): String {
-
-        val jsonNode = objectMapper.readTree(jsonString)
-
-        val result = jsonNode.get("result")
-
-        val action: String? = if (result.has("gameState")) {
-            val gameState = result.get("gameState")
-            val public = gameState.get("public")
-            val actions = public.get("actions")
-
-            actions?.get(0)?.asText()
-        } else {
-            val public = result.get("public")
-            val actions = public.get("actions")
-
-            actions?.get(0)?.asText()
-        }
-
-        if (action.isNullOrEmpty()) {
-            throw Exception("No actions were found")
-        }
-        return action
-    }
 }
