@@ -8,7 +8,7 @@ class ActionBuilder(
     private val objectMapper: ObjectMapper
 ) {
 
-    fun getFirstActionWithGson(jsonString: String): String {
+    fun getFirstAction(jsonString: String): String {
 
         val jsonNode = objectMapper.readTree(jsonString)
 

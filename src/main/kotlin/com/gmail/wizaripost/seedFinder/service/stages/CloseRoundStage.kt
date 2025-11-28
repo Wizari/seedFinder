@@ -8,7 +8,7 @@ import com.gmail.wizaripost.seedFinder.service.actions.SpinService
 import org.springframework.stereotype.Service
 
 @Service
-class SpinRoundStage(
+class CloseRoundStage(
     private val spinService: SpinService,
     private val objectMapper: ObjectMapper,
     private val resultPostProcessor: ResultPostProcessor,
@@ -16,7 +16,7 @@ class SpinRoundStage(
     ) : RoundStage {
 
     override fun valid(action: String): Boolean {
-        return action.uppercase() == "SPIN"
+        return action.uppercase() == "CLOSE"
     }
 
     override fun  execute(params: Map<String, Any>?): RoundStageResponse {
@@ -27,7 +27,7 @@ class SpinRoundStage(
         val payload = params["payload"] as GameResponse
         val responseString = spinService.execute(gameId, payload)
         val response: GameResponse = objectMapper.readValue(responseString)
-        resultPostProcessor.process("Spin", responseString)
+        resultPostProcessor.process("Close", responseString)
         val nextAction = actionBuilder.getFirstAction(responseString)
         return RoundStageResponse(nextAction, response)
     }
