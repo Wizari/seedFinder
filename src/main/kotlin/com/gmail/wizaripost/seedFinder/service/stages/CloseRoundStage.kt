@@ -3,7 +3,7 @@ package com.gmail.wizaripost.seedFinder.service.stages
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.gmail.wizaripost.seedFinder.dto.GameResponse
-import com.gmail.wizaripost.seedFinder.service.ResultPostProcessor
+import com.gmail.wizaripost.seedFinder.service.processor.ResultPostProcessor
 import com.gmail.wizaripost.seedFinder.service.actions.CloseService
 import com.gmail.wizaripost.seedFinder.service.actions.SpinService
 import org.springframework.stereotype.Service

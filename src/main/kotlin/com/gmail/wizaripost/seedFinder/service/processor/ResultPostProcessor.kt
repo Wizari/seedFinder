@@ -1,4 +1,4 @@
-package com.gmail.wizaripost.seedFinder.service
+package com.gmail.wizaripost.seedFinder.service.processor
 
 interface ResultPostProcessor {
 
