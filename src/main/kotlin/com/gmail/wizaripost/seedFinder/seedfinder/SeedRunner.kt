@@ -23,15 +23,17 @@ class SeedRunner(
     private val spinService: SpinService,
     private val freeSpinService: FreeSpinService,
     private val closeService: CloseService,
-    private val resultPostProcessor: ResultPostProcessor
-
+    private val resultPostProcessor: ResultPostProcessor,
+    private val objectMapper: ObjectMapper
 ) {
 
     private val logger = LoggerFactory.getLogger(SeedRunner::class.java)
-    private val objectMapper: ObjectMapper = jacksonObjectMapper()
-    var response: GameResponse? = null
+
+
 
     fun run(seed: ULong) {
+
+        var response: GameResponse? = null
         // Шаг 1: NewGame
         val gameId = "RumblingRun-variation-95"
         val responseNewGameString = newGameService.execute(gameId, seed)
@@ -93,7 +95,7 @@ class SeedRunner(
     }
 
     fun getFirstActionWithGson(jsonString: String): String {
-        val objectMapper = ObjectMapper()
+
         val jsonNode = objectMapper.readTree(jsonString)
 
         val result = jsonNode.get("result")
