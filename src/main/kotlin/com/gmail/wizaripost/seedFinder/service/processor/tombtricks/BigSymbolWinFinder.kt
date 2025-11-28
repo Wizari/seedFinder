@@ -19,35 +19,43 @@ class BigSymbolWinFinder(private val om: ObjectMapper) : ResultPostProcessor {
 
         // Получаем данные о большом символе
         val bigSymbol = resp.result?.gameState?.public?.bigSymbolFeature?.tlc?.firstOrNull()
+        val bigSymbols = resp.result?.gameState?.public?.bigSymbolFeature?.tlc ?: emptyList()
+
+        for (bigSymbol in bigSymbols) {
+            if (bigSymbol.row == 0 || bigSymbol.reel == 0) {
+                return
+            }
+        }
+
+        val matrix = resp.result?.gameState?.public?.matrixMS?.content
+
+        if (matrix != null) {
+            val firstReel = matrix[0]
+
+            for (element in firstReel) {
+                if (element == 1) {
+                    return
+                }
+            }
+        }
+
         val bigSymbolRow = bigSymbol?.row
         val bigSymbolReel = bigSymbol?.reel
 
         // Получаем выигрышные комбинации и матрицу
         val lstPrz = resp.result?.gameState?.public?.gmtrPrz?.lstPrz
-        val matrix = resp.result?.gameState?.public?.matrixMS?.content
 
-        if (matrix != null) {
-            for (reel in matrix) {
-                for (element in reel) {
-                    if (element == 1) {
-                        return
-                    }
-                }
-            }
-        } else {
-
-        }
 
             ?: throw RuntimeException("Required cap height")
-            if (bigSymbolReel != 0 && bigSymbolRow != null && bigSymbolReel != null && lstPrz != null && matrix != null) {
-                // Создаем объединенную маску из всех выигрышных комбинаций
-                val combinedMask = createCombinedMask(lstPrz, matrix.size, matrix[0].size)
+        if (bigSymbolRow != 0 && bigSymbolReel != 0 && bigSymbolRow != null && bigSymbolReel != null && lstPrz != null && matrix != null) {
+            // Создаем объединенную маску из всех выигрышных комбинаций
+            val combinedMask = createCombinedMask(lstPrz, matrix.size, matrix[0].size)
 
-                // Проверяем, есть ли выигрышные символы прямо под большим символом 2x2
-                if (hasWinningSymbolsUnderBigSymbol(matrix, combinedMask, bigSymbolRow, bigSymbolReel, seed)) {
-                    println("Найден Seed ${resp.result.gameState.private?.modelCore?.seed}")
-                }
+            // Проверяем, есть ли выигрышные символы прямо под большим символом 2x2
+            if (hasWinningSymbolsUnderBigSymbol(matrix, combinedMask, bigSymbolRow, bigSymbolReel, seed)) {
+                println(resp.result.gameState.private?.modelCore?.seed)
             }
+        }
     }
 
     private fun createCombinedMask(lstPrz: List<PrzItem>, rows: Int, cols: Int): Array<IntArray> {
