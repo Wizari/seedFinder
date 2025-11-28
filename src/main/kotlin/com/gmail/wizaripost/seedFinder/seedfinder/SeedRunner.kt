@@ -12,7 +12,9 @@ import com.gmail.wizaripost.seedFinder.service.actions.CloseService
 import com.gmail.wizaripost.seedFinder.service.actions.FreeSpinService
 import com.gmail.wizaripost.seedFinder.service.actions.NewGameService
 import com.gmail.wizaripost.seedFinder.service.actions.SpinService
+import com.gmail.wizaripost.seedFinder.service.stages.RoundStage
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 
 
@@ -20,11 +22,9 @@ import org.springframework.stereotype.Component
 class SeedRunner(
     private val mathClient: MathClient,
     private val newGameService: NewGameService,
-    private val spinService: SpinService,
-    private val freeSpinService: FreeSpinService,
-    private val closeService: CloseService,
     private val resultPostProcessor: ResultPostProcessor,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val roundStage: Set<RoundStage>
 ) {
 
     private val logger = LoggerFactory.getLogger(SeedRunner::class.java)
@@ -39,56 +39,23 @@ class SeedRunner(
         val responseNewGameString = newGameService.execute(gameId, seed)
         val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
 
-        resultPostProcessor.process("NewGame", newGameResponse)
+//        resultPostProcessor.process("NewGame", newGameResponse)
         var action: String = getFirstActionWithGson(responseNewGameString)
-        logger.info("Executing command: $action")
+//        logger.info("Executing command: $action")
+        response = newGameResponse
 
         // Шаг 2: GetConfig
         val responseGetConfigString = mathClient.getConfig(gameId)
         val configResponse: ConfigResponse = objectMapper.readValue(responseGetConfigString)
-        resultPostProcessor.process("GetConfig", configResponse)
-
+//        resultPostProcessor.process("GetConfig", configResponse)
 
         do {
-            when (action) {
-                "Spin" -> {
-                    logger.info("Executing command: $action")
 
-                    val responseString = spinService.execute(gameId, newGameResponse)
-                    response = objectMapper.readValue(responseString)
-                    resultPostProcessor.process("Spin", responseString)
-
-                    action = getFirstActionWithGson(responseString)
-                    logger.info("->> NEXT ACTIONS: $action")
-
-                }
-
-                "FreeSpin" -> {
-                    logger.info("Executing command: $action")
-
-                    val responseString = freeSpinService.execute(gameId, response)
-                    response = objectMapper.readValue(responseString)
-                    resultPostProcessor.process("FreeSpin", responseString)
-
-                    action = getFirstActionWithGson(responseString)
-                    logger.info("->> NEXT ACTIONS: $action")
-                }
-
-                "Close" -> {
-                    logger.info("Executing command: $action")
-
-                    val responseString = closeService.execute(gameId, response)
-                    response = objectMapper.readValue(responseString)
-
-                    resultPostProcessor.process("Close", responseString)
-
-                    action = getFirstActionWithGson(responseString)
-                    logger.info("->> NEXT ACTIONS: $action")
-
-                    // После Close завершаем цикл
-                    logger.info("Close command executed, ending game round.")
-                }
-            }
+            val stage = roundStage.find { it.valid(action) } ?: throw RuntimeException("Unknow stage $action")
+            val gameResponse = response ?: throw RuntimeException("Response can't be null")
+            val stageResponse = stage.execute(mapOf("gameId" to gameId, "payload" to gameResponse))
+            action = stageResponse.nextAction
+            response = stageResponse.response
 
         } while (action != "Spin")
         logger.info("Game round completed for seed: $seed")
