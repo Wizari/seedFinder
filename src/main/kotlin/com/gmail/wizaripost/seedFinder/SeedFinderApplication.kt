@@ -32,12 +32,8 @@ fun main(args: Array<String>) {
     val argsArr : Array<String> = arrayOf("623927852")
     val seed = argsProcessor.parseFirstArgToULong(argsArr)
 
-    // Шаг 1: NewGame
+//    // Шаг 1: NewGame
     val gameId = "RumblingRun-variation-95"
-    val responseNewGameString = newGameService.execute(gameId, seed)
-    val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
-
-
 
     // Шаг 2: GetConfig
     val responseGetConfigString = mathClient.getConfig(gameId)
@@ -48,7 +44,7 @@ fun main(args: Array<String>) {
         val responseNewGameString = newGameService.execute(gameId, seed)
         val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
 
-        seedRunner.run(gameId, newGameResponse)
+        seedRunner.run(gameId, i.toULong(), newGameResponse)
     }
 //    seedRunner.run(args[0].toULong())
 }
