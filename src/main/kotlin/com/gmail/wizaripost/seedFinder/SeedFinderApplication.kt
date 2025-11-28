@@ -5,10 +5,12 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.gmail.wizaripost.seedFinder.client.MathClient
 import com.gmail.wizaripost.seedFinder.dto.ConfigResponse
 import com.gmail.wizaripost.seedFinder.dto.GameResponse
+import com.gmail.wizaripost.seedFinder.dto.GameState
+
+
 import com.gmail.wizaripost.seedFinder.seedfinder.SeedRunner
 import com.gmail.wizaripost.seedFinder.service.ArgsProcessor
 import com.gmail.wizaripost.seedFinder.service.actions.NewGameService
-import com.gmail.wizaripost.seedFinder.service.stages.ActionBuilder
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -40,7 +42,7 @@ fun main(args: Array<String>) {
     val configResponse: ConfigResponse = objectMapper.readValue(responseGetConfigString)
 //        resultPostProcessor.process("GetConfig", configResponse)
 
-    for (i in 0..10) {
+    for (i in 0..100000) {
         val responseNewGameString = newGameService.execute(gameId, seed)
         val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
 

@@ -1,5 +1,7 @@
 package com.gmail.wizaripost.seedFinder.dto
 
+import com.fasterxml.jackson.annotation.JsonKey
+
 
 // Используется как для NewGame, так и для Execute
 data class GameResponse(
@@ -12,7 +14,7 @@ data class GameResult(
 
 data class GameState(
     val `public`: PublicGameState? = null,
-    val private: PrivateGameState? = null // Или другие поля приватного состояния
+    val `private`: PrivateGameState? = null // Или другие поля приватного состояния
 )
 
 data class PublicGameState(
@@ -37,7 +39,7 @@ data class ModelCorePublic(
     val isGCRl: Boolean? = null
     // Добавьте другие поля ModelCore если нужно
 )
-
+//
 data class PrivateGameState(
     val ModelCore: ModelCorePrivate? = null
     // Добавьте другие поля private gameState если нужно

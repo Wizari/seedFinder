@@ -13,7 +13,7 @@ class ExtractConfigParameters {
         // Извлекаем ModelCore
         val modelCore = configResult?.get("ModelCore") as? Map<String, Any>
         if (modelCore == null) {
-            logger.warn("ModelCore not found in config. Using defaults.")
+//            logger.warn("ModelCore not found in config. Using defaults.")
             return Triple(1, 243, 0)
         }
 
