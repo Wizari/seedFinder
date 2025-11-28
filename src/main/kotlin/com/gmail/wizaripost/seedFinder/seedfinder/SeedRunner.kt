@@ -2,19 +2,14 @@ package com.gmail.wizaripost.seedFinder.seedfinder
 
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.gmail.wizaripost.seedFinder.client.MathClient
 import com.gmail.wizaripost.seedFinder.dto.ConfigResponse
 import com.gmail.wizaripost.seedFinder.dto.GameResponse
 import com.gmail.wizaripost.seedFinder.service.ResultPostProcessor
-import com.gmail.wizaripost.seedFinder.service.actions.CloseService
-import com.gmail.wizaripost.seedFinder.service.actions.FreeSpinService
 import com.gmail.wizaripost.seedFinder.service.actions.NewGameService
-import com.gmail.wizaripost.seedFinder.service.actions.SpinService
 import com.gmail.wizaripost.seedFinder.service.stages.RoundStage
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 
 
@@ -40,7 +35,7 @@ class SeedRunner(
         val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
 
 //        resultPostProcessor.process("NewGame", newGameResponse)
-        var action: String = getFirstActionWithGson(responseNewGameString)
+        var action: String = getFirstAction(responseNewGameString)
 //        logger.info("Executing command: $action")
         response = newGameResponse
 
@@ -57,11 +52,12 @@ class SeedRunner(
             action = stageResponse.nextAction
             response = stageResponse.response
 
+
         } while (action != "Spin")
         logger.info("Game round completed for seed: $seed")
     }
 
-    fun getFirstActionWithGson(jsonString: String): String {
+    fun getFirstAction(jsonString: String): String {
 
         val jsonNode = objectMapper.readTree(jsonString)
 

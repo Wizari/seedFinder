@@ -4,12 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.gmail.wizaripost.seedFinder.dto.GameResponse
 import com.gmail.wizaripost.seedFinder.service.ResultPostProcessor
+import com.gmail.wizaripost.seedFinder.service.actions.CloseService
 import com.gmail.wizaripost.seedFinder.service.actions.SpinService
 import org.springframework.stereotype.Service
 
 @Service
 class CloseRoundStage(
-    private val spinService: SpinService,
+    private val spinService: CloseService,
     private val objectMapper: ObjectMapper,
     private val resultPostProcessor: ResultPostProcessor,
     private val actionBuilder: ActionBuilder,
