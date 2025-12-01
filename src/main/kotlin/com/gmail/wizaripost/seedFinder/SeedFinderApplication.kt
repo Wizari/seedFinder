@@ -13,6 +13,7 @@ import org.springframework.beans.factory.getBean
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.cloud.openfeign.EnableFeignClients
+import kotlin.concurrent.thread
 
 
 @EnableFeignClients
@@ -41,43 +42,36 @@ fun main(args: Array<String>) {
     val gameResponse: GameResponse = objectMapper.readValue(responseGetConfigString)
 //        resultPostProcessor.process("GetConfig", configResponse)
 
-    for (i in 0..10000000) {
-//        ultraFastCounter(10000000)
-//        val responseNewGameString = newGameService.execute(gameId, seed)
-//        val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
+//    val first: Long = 0
+//    val last: Long = 10_000_000
+//
+//    for (i in first..last) {
+////        ultraFastCounter(10000000)
+////        val responseNewGameString = newGameService.execute(gameId, seed)
+////        val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
+//
+//        seedRunner.run(gameId, i.toULong(), gameResponse)
+//    }
 
+    val firstSeed: Long = 0
+    val lastSeed: Long = 100_000
+
+    val total = lastSeed - firstSeed + 1
+    var currentI = firstSeed // Объявляем как var, чтобы можно было менять изнутри цикла
+
+// Запускаем фоновую задачу для отображения прогресса
+    val progressThread = thread(name = "ProgressReporter") {
+        while (currentI <= lastSeed -1) {
+            val percent = ((currentI - firstSeed) * 100) / (total - 1)
+            print("\r[Progress: $percent%] ")
+            println()
+            Thread.sleep(10000) // Обновляем раз в 10 секунд
+        }
+    }
+
+// Сам цикл
+    for (i in firstSeed..lastSeed) {
+        currentI = i // Обновляем общую переменную
         seedRunner.run(gameId, i.toULong(), gameResponse)
     }
-
-
-//    val seed = 0
-//    val total = 100_000_0
-//    var result = 0L
-//
-//    lightProgress(total) { seed ->
-//        val responseNewGameString = newGameService.execute(gameId, seed)
-//        val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
-//
-//        seedRunner.run(gameId, i.toULong(), newGameResponse)
-////        // Твой код для КАЖДОГО i здесь
-//////        val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
-//////        val responseNewGameString = newGameService.execute(gameId, seed)
-////        val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
-////        seedRunner.run(gameId, seed.toULong(), newGameResponse)
-////
-////        // Если нужен result
-////        result += i * i
-//    }
-}
-
-fun lightProgress(totalItems: Int, action: (Int) -> Unit) {
-    val updateEvery = (totalItems / 100).coerceAtLeast(1) // Обновлять ~100 раз
-
-    for (i in 0..totalItems) {
-        if (i % updateEvery == 0 || i == totalItems) {
-            print("\r${(i * 100 / totalItems)}%")
-        }
-        action(i)
-    }
-    println("\rDone")
 }
