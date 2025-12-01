@@ -2,6 +2,7 @@ package com.gmail.wizaripost.seedFinder.service.stages
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.gmail.wizaripost.seedFinder.dto.ConfigResponse
 import com.gmail.wizaripost.seedFinder.dto.GameResponse
 import com.gmail.wizaripost.seedFinder.service.processor.ResultPostProcessor
 import com.gmail.wizaripost.seedFinder.service.actions.SpinService
@@ -25,11 +26,12 @@ class SpinRoundStage(
         }
         val gameId = params["gameId"] as String
         val payload = params["payload"] as GameResponse
-        val responseString = spinService.execute(gameId, payload)
+        val configResponse = params["configResponse"] as ConfigResponse
+        val responseString = spinService.execute(gameId, payload, configResponse)
         val response: GameResponse = objectMapper.readValue(responseString)
         resultPostProcessor.process("Spin", responseString)
         val nextAction = actionBuilder.getFirstAction(responseString)
-        return RoundStageResponse(nextAction, response)
+        return RoundStageResponse(nextAction, response, configResponse)
     }
 
 }

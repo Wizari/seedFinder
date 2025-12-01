@@ -38,7 +38,7 @@ class ExtractConfigParameters {
             0
         }
 
-        logger.info("Extracted config: denomination=$denomination, lines=$linesAmount, betType=$betTypeId")
+        logger.warn("Extracted config: denomination=$denomination, lines=$linesAmount, betType=$betTypeId")
         return Triple(denomination, linesAmount, betTypeId)
     }
 

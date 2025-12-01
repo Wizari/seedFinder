@@ -1,5 +1,10 @@
 package com.gmail.wizaripost.seedFinder.service.stages
 
+import com.gmail.wizaripost.seedFinder.dto.ConfigResponse
 import com.gmail.wizaripost.seedFinder.dto.GameResponse
 
-data class RoundStageResponse (val nextAction: String, val response: GameResponse)
+data class RoundStageResponse(
+    val nextAction: String,
+    val response: GameResponse,
+    val initParams: ConfigResponse? = null
+)

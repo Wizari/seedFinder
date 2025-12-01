@@ -35,23 +35,13 @@ fun main(args: Array<String>) {
 
 //    // Шаг 1: NewGame
     val gameId = "RumblingRun-variation-95"
+//    val gameId = "Merlin-variation-0"
 
     // Шаг 2: GetConfig
     val responseGetConfigString = mathClient.getConfig(gameId)
     val configResponse: ConfigResponse = objectMapper.readValue(responseGetConfigString)
-    val gameResponse: GameResponse = objectMapper.readValue(responseGetConfigString)
+//    val gameResponse: GameResponse = objectMapper.readValue(responseGetConfigString)
 //        resultPostProcessor.process("GetConfig", configResponse)
-
-//    val first: Long = 0
-//    val last: Long = 10_000_000
-//
-//    for (i in first..last) {
-////        ultraFastCounter(10000000)
-////        val responseNewGameString = newGameService.execute(gameId, seed)
-////        val newGameResponse: GameResponse = objectMapper.readValue(responseNewGameString)
-//
-//        seedRunner.run(gameId, i.toULong(), gameResponse)
-//    }
 
     val firstSeed: Long = 0
     val lastSeed: Long = 100_000
@@ -72,6 +62,6 @@ fun main(args: Array<String>) {
 // Сам цикл
     for (i in firstSeed..lastSeed) {
         currentI = i // Обновляем общую переменную
-        seedRunner.run(gameId, i.toULong(), gameResponse)
+        seedRunner.run(gameId, i.toULong(), configResponse)
     }
 }

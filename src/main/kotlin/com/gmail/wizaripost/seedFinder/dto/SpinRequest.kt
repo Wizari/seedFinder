@@ -2,10 +2,10 @@ package com.gmail.wizaripost.seedFinder.dto
 
 data class SpinRequest(
     val command: String,
-    val denomination: Int,
-    val lines: Int,
-    val lineBet: Int,
-    val betType: Int,
+    val denomination: Int?,
+    val lines: Int?,
+    val lineBet: Int?,
+    val betType: Int?,
     val risk: Boolean,
 //    val gameState: Map<String, Any>?, // gameState как Map
 //    val gameState: Map<String, Any>?, // gameState как Map
