@@ -7,7 +7,12 @@ import com.gmail.wizaripost.seedFinder.dto.PrzItem
 import com.gmail.wizaripost.seedFinder.service.processor.ResultPostProcessor
 import org.springframework.stereotype.Service
 
-@Service
+
+/*
+* [Tomb Tricks] Большая мумия на выигрышном символе (ожидается что таких нет)
+*/
+
+//@Service
 class BigSymbolWinFinder(private val om: ObjectMapper) : ResultPostProcessor {
     override fun process(key: String, payload: Any) {
         if (key != "Spin") {
