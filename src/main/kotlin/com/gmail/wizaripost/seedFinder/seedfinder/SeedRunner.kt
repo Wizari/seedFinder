@@ -26,9 +26,13 @@ class SeedRunner(
         var action = "Spin"
         do {
             val stage = roundStage.find { it.valid(action) } ?: throw RuntimeException("Unknow stage $action")
-            val gameResponse = response ?: throw RuntimeException("Response can't be null")
+            val gameResponse = response
+                ?: throw RuntimeException("Response can't be null")
             val stageResponse =
-                stage.execute(mapOf("gameId" to gameId, "payload" to gameResponse, "configResponse" to configResponse))
+                stage.execute(mapOf(
+                        "gameId" to gameId, "payload" to gameResponse, "configResponse" to configResponse
+                    )
+                )
             action = stageResponse.nextAction
             response = stageResponse.response
         } while (action != "Spin")

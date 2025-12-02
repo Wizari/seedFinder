@@ -175,10 +175,24 @@ data class FreeSpinsPrivate(
     val isLock: Boolean? = null
 )
 
-data class BrilliantSpins(
-    @JsonProperty("listFJps")
-    val listFJps: List<Any>? = null,
+//data class BrilliantSpins(
+//    @JsonProperty("listFJps")
+//    val listFJps: List<Any>? = null,
 
+//    @JsonProperty("idAST")
+//    val idAST: Int? = null,
+//
+//    @JsonProperty("actFtr")
+//    val actFtr: Int? = null,
+//
+//    @JsonProperty("actPrz")
+//    val actPrz: Int? = null,
+//
+//    @JsonProperty("wtSTTA")
+//    val wtSTTA: Boolean? = null
+//)
+
+data class BrilliantSpins(
     @JsonProperty("idAST")
     val idAST: Int? = null,
 
@@ -189,7 +203,86 @@ data class BrilliantSpins(
     val actPrz: Int? = null,
 
     @JsonProperty("wtSTTA")
-    val wtSTTA: Boolean? = null
+    val wtSTTA: Boolean? = null,
+
+    @JsonProperty("listFJps")
+    val listFJps: List<Any>? = null,
+
+    @JsonProperty("Activity")
+    val activity: Activity? = null,
+
+    @JsonProperty("amtRstSp")
+    val amountResetSpins: Int? = null,
+
+    @JsonProperty("totPrz")
+    val totalPrize: Int? = null,
+
+    @JsonProperty("lstRdJps")
+    val listRoundJackpots: List<JackpotState>? = null,
+
+    @JsonProperty("lstLSpJps")
+    val listLastSpinJackpots: List<JackpotState>? = null,
+
+    @JsonProperty("bmbTrgs")
+    val bombTriggers: List<BombTrigger>? = null,
+
+    @JsonProperty("trnsf")
+    val transfers: List<Transfer>? = null,
+
+    @JsonProperty("cntnt")
+    val content: List<List<Int>>? = null,
+
+    @JsonProperty("mtrx")
+    val matrix: List<List<MatrixCell>>? = null,
+
+    @JsonProperty("hght")
+    val height: Int? = null
+)
+
+data class JackpotState(
+    @JsonProperty("id")
+    val id: Int? = null,
+
+    @JsonProperty("paid")
+    val paid: Int? = null
+)
+
+data class BombTrigger(
+    @JsonProperty("rl")
+    val row: Int? = null,
+
+    @JsonProperty("rw")
+    val column: Int? = null,
+
+    @JsonProperty("trgs")
+    val triggers: List<Trigger>? = null
+)
+
+data class Trigger(
+    @JsonProperty("rl")
+    val row: Int? = null,
+
+    @JsonProperty("rw")
+    val column: Int? = null
+)
+
+data class Transfer(
+    @JsonProperty("type")
+    val type: Int? = null,
+
+    @JsonProperty("mtrx")
+    val matrix: List<List<MatrixCell>>? = null
+)
+
+data class MatrixCell(
+    @JsonProperty("id")
+    val id: Int? = null,
+
+    @JsonProperty("grp")
+    val group: Int? = null,
+
+    @JsonProperty("val")
+    val value: Int? = null
 )
 
 data class PrivateJackpots(
