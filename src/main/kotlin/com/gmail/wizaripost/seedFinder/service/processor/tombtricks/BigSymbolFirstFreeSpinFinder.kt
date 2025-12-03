@@ -4,13 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.gmail.wizaripost.seedFinder.dto.GameStateResponse
 import com.gmail.wizaripost.seedFinder.dto.PrzItem
+import com.gmail.wizaripost.seedFinder.logging.LoggingService
 import com.gmail.wizaripost.seedFinder.service.processor.ResultPostProcessor
 import org.springframework.stereotype.Service
 /*
 * [Tomb Tricks] Большая мумия на первом фри спине
 */
 //@Service
-class BigSymbolFirstFreeSpinFinder(private val om: ObjectMapper) : ResultPostProcessor {
+class BigSymbolFirstFreeSpinFinder(private val om: ObjectMapper) :LoggingService(), ResultPostProcessor {
     override fun process(key: String, payload: Any) {
         if (key != "FreeSpin") {
             return
@@ -32,6 +33,7 @@ class BigSymbolFirstFreeSpinFinder(private val om: ObjectMapper) : ResultPostPro
             return
         }
 
+        logSeed(seed)
         println(resp.result.gameState.private?.modelCore?.seed)
     }
 }
