@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Service
-class SimpleFileLogger {
+class FileLogger {
 
     @Value("\${logging.max-size:10485760}") // 10MB по умолчанию
     private lateinit var maxSizeStr: String
@@ -46,23 +46,30 @@ class SimpleFileLogger {
         private var writer: PrintWriter? = null
         private var currentFileIndex = 0
         private var currentFileSize = 0L
+        private val classLogDir: File
 
         init {
+            // Создаем папку для класса: logs/ClassName/
+            classLogDir = File(logDir, className)
+            if (!classLogDir.exists()) {
+                classLogDir.mkdirs()
+            }
+
             findLatestFile()
         }
 
         private fun findLatestFile() {
-            val files = logDir.listFiles { it.name.startsWith("$className.log") } ?: emptyArray()
+            val files = classLogDir.listFiles { it.name.startsWith("$className.log") } ?: emptyArray()
 
             if (files.isNotEmpty()) {
                 var maxIndex = 0
                 for (file in files) {
-                    val index = if (file.name == "$className.log") {
-                        0
-                    } else if (file.name.startsWith("$className.log.")) {
-                        file.name.substringAfter("$className.log.").toIntOrNull() ?: 0
-                    } else {
-                        0
+                    val index = when {
+                        file.name == "$className.log" -> 0
+                        file.name.startsWith("$className.log.") -> {
+                            file.name.substringAfter("$className.log.").toIntOrNull() ?: 0
+                        }
+                        else -> 0
                     }
                     if (index > maxIndex) maxIndex = index
                 }
@@ -82,14 +89,14 @@ class SimpleFileLogger {
             return if (currentFileIndex == 0) "$className.log" else "$className$currentFileIndex.log"
         }
 
-        private fun getCurrentFile(): File = File(logDir, getCurrentFileName())
+        private fun getCurrentFile(): File = File(classLogDir, getCurrentFileName())
 
         private fun createNewFile() {
             writer?.close()
             writer = null
             currentFileIndex++
             currentFileSize = 0L
-            println("[$className] New log file: ${getCurrentFileName()}")
+            // Тихое создание нового файла
         }
 
         override fun info(msg: String) = write(msg, "INFO")
@@ -99,6 +106,9 @@ class SimpleFileLogger {
 
         override fun error(msg: String, e: Throwable) {
             write("$msg: ${e.message}", "ERROR")
+            // Выводим только ошибки в консоль
+            val consoleMsg = "\u001B[31m[$className] $msg: ${e.message}\u001B[0m"
+            println(consoleMsg)
             e.printStackTrace()
         }
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 /*
 * test
 */
-@Service
+//@Service
 class TestFinder(private val om: ObjectMapper) :LoggingService(), ResultPostProcessor {
     override fun process(key: String, payload: Any) {
         if (key != "Spin") {
@@ -20,23 +20,9 @@ class TestFinder(private val om: ObjectMapper) :LoggingService(), ResultPostProc
         val resp: GameStateResponse = om.readValue(payload as String)
         val seed = resp.result?.gameState?.private?.modelCore?.seed //TODO debug
 
-//        // Получаем данные о большом символе
-//        val bigSymbol = resp.result?.gameState?.public?.bigSymbolFeature?.tlc?.firstOrNull()
-//        val bigSymbols = resp.result?.gameState?.public?.bigSymbolFeature?.tlc ?: emptyList()
-//
-//        val currentSpin = resp.result?.gameState?.public?.freeSpins?.currentSpin
-//
-//        if (bigSymbol == null) {
-//            return
-//        }
-//        if (currentSpin != 1) {
-//            return
-//        }
 if (seed != null) {
     logSeed(seed)
     println(seed)
 }
-//        logSeed(seed)
-//        println(seed)
     }
 }

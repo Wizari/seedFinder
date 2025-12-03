@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.gmail.wizaripost.seedFinder.dto.GameStateResponse
 import com.gmail.wizaripost.seedFinder.dto.PrzItem
+import com.gmail.wizaripost.seedFinder.logging.LoggingService
 import com.gmail.wizaripost.seedFinder.service.processor.ResultPostProcessor
 import org.springframework.stereotype.Service
 
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service
 */
 
 //@Service
-class BigSymbolWinFinder(private val om: ObjectMapper) : ResultPostProcessor {
+class BigSymbolWinFinder(private val om: ObjectMapper) :LoggingService(), ResultPostProcessor {
     override fun process(key: String, payload: Any) {
         if (key != "Spin") {
             return
