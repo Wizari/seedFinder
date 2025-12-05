@@ -26,35 +26,38 @@ fun main(args: Array<String>) {
     val objectMapper = application.getBean<ObjectMapper>()
     val mathClient = application.getBean<MathClient>()
 //11946555
-    val firstSeed: Long = 1L
+//    val firstSeed: Long = 1L
+    val firstSeed: Long = 1_000_000L
 
-    val lastSeed: Long = 1_000_000L
+    val lastSeed: Long = 100_000_000L
 
 //    val firstSeed: Long = 2500L
 //    val lastSeed: Long = 100L
 //    val lastSeed: Long = 3500L
 //
     // Вызов метода с параллельной обработкой
-//    parallelSeedProcessingHybrid(
-//        seedRunner = seedRunner,
-//        mathClient = mathClient,
-//        objectMapper = objectMapper,
-//        gameId = "RumblingRun-variation-95",
-//        firstSeed = firstSeed,
-//        lastSeed = lastSeed,
-////        concurrency = 28 // Используйте все 28 ядер
-//        concurrency = 10 // Используйте все 28 ядер
-//    )
 
 
-    simpleFor(
+    parallelSeedProcessingHybrid(
         seedRunner = seedRunner,
         mathClient = mathClient,
         objectMapper = objectMapper,
         gameId = "RumblingRun-variation-95",
         firstSeed = firstSeed,
         lastSeed = lastSeed,
+//        concurrency = 28 // Используйте все 28 ядер
+        concurrency = 10 // Используйте все 28 ядер
     )
+
+
+//    simpleFor(
+//        seedRunner = seedRunner,
+//        mathClient = mathClient,
+//        objectMapper = objectMapper,
+//        gameId = "RumblingRun-variation-95",
+//        firstSeed = firstSeed,
+//        lastSeed = lastSeed,
+//    )
 
 }
 

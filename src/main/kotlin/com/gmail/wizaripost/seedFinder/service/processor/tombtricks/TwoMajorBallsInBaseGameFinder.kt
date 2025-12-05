@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 * [Tomb Tricks] 2 x major и/или 3 x гранд в базовой игре
 */
 
-@Service
+//@Service
 class TwoMajorBallsInBaseGameFinder(private val om: ObjectMapper) : LoggingService(), ResultPostProcessor {
     override fun process(key: String, payload: Any) {
         if (key != "Spin") {

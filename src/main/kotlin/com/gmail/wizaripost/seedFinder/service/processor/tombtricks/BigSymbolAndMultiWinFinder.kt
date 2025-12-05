@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 * [Tomb Tricks] Вин Мумия + мультивин
 */
 
-@Service
+//@Service
 class BigSymbolAndMultiWinFinder(private val om: ObjectMapper) : LoggingService(), ResultPostProcessor {
     override fun process(key: String, payload: Any) {
         if (key != "Spin") {
@@ -30,9 +30,6 @@ class BigSymbolAndMultiWinFinder(private val om: ObjectMapper) : LoggingService(
         if (bigSymbol == null) {
             return
         }
-
-
-        val matrix = resp.result?.gameState?.public?.matrixMS?.content
 
         for (bigSymbol in bigSymbols) {
             if (bigSymbol.row != 7 || bigSymbol.reel != 0) {
