@@ -14,13 +14,19 @@ class SpinService(
 
     fun execute(gameId: String, gameResponse: GameResponse, configResponse: ConfigResponse): String {
 
+        var maxBaseBet = configResponse.result?.modelCore?.listSLB?.last()?: 2
+//        val baseGameBet = configResponse.result?.modelCore?.betTypes?.get(0)?.baseGameBet?: 1
+//        var betMultiplayer TODO для игры с бет множителем(multiplier)(Legends OH)
+//        var bet = maxBaseBet * baseGameBet
+
+
         val executeRequest = SpinRequest(
             command = "Spin",
             denomination = configResponse.result?.modelCore?.listLAD?.get(0)?.denomination,
             lines = configResponse.result?.modelCore?.listLAD?.get(0)?.listLA?.get(0),
-            lineBet = 2, // или извлекать из gameState, если меняется
-            betType = configResponse.result?.modelCore?.listSLB?.last(),
-            risk = false, // или извлекать из gameState/config
+            lineBet = maxBaseBet,
+            betType = configResponse.result?.modelCore?.betTypes?.get(0)?.id,
+            risk = false,
             gameState = gameResponse.result!!,
             demoId = -1,
             demoSeed = -1

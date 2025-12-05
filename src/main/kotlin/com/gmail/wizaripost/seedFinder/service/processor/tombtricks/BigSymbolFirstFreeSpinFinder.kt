@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 /*
 * [Tomb Tricks] Большая мумия на первом фри спине
 */
-@Service
+//@Service
 class BigSymbolFirstFreeSpinFinder(private val om: ObjectMapper) :LoggingService(), ResultPostProcessor {
     override fun process(key: String, payload: Any) {
         if (key != "FreeSpin") {

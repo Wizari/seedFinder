@@ -46,7 +46,7 @@ data class PublicState(
     val bet: Int? = null,
 
     @JsonProperty("rsltGC")
-    val resultGC: Int? = null,
+    val resultGC: Long? = null,
 
     @JsonProperty("actions")
     val actions: List<String>? = null,
