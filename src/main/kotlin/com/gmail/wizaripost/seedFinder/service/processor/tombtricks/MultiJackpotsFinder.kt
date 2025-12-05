@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service
 64079318 ДВА ДЖЕКПОТА grand X2 +super+mega +шар маджора
 66313693 ДВА ДЖЕКПОТА major X2 и один шар гранда
 66568800 ДВА ДЖЕКПОТА major X2
-
+    val lastSeed: Long = 350_000_000L
 */
-@Service
+//@Service
 class MultiJackpotsFinder(private val om: ObjectMapper) : LoggingService(), ResultPostProcessor {
     override fun process(key: String, payload: Any) {
         if (key == "Close") {

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 * [Tomb Tricks] Требуется, чтобы большая выигрышная мумия был виден наполовину снизу + наполовину за шторой
 */
 
-@Service
+//@Service
 class HalfVisibleBigSymbolFinder(private val om: ObjectMapper) : LoggingService(), ResultPostProcessor {
     override fun process(key: String, payload: Any) {
         if (key != "Spin") {
