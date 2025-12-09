@@ -26,8 +26,9 @@ fun main(args: Array<String>) {
     val objectMapper = application.getBean<ObjectMapper>()
     val mathClient = application.getBean<MathClient>()
 //11946555
-//    val firstSeed: Long = 1L
-    val firstSeed: Long = 1_000_000L
+    val firstSeed: Long = 1L
+//    val firstSeed: Long = 1_000_000L
+//    val firstSeed: Long = 100_000_000L
 
     val lastSeed: Long = 100_000_000L
 

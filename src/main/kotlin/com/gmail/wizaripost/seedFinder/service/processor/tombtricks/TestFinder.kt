@@ -21,7 +21,7 @@ class TestFinder(private val om: ObjectMapper) :LoggingService(), ResultPostProc
         val seed = resp.result?.gameState?.private?.modelCore?.seed //TODO debug
 
 if (seed != null) {
-    logSeed(seed)
+//    logSeed(seed)
     println(seed)
 }
     }
