@@ -26,7 +26,7 @@ class BigSymbolWinFinderTwo(private val om: ObjectMapper) : LoggingService(), Re
         val bigSymbol = resp.result?.gameState?.public?.bigSymbolFeature?.tlc?.firstOrNull()
         val bigSymbols = resp.result?.gameState?.public?.bigSymbolFeature?.tlc ?: emptyList()
         val height = resp.result?.gameState?.public?.dynMatrix?.height?.get(0)
-        if (height == 8) {
+        if (height != 7) {
             return
         }
         if (bigSymbol == null) {
