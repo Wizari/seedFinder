@@ -27,7 +27,9 @@ fun main(args: Array<String>) {
     val mathClient = application.getBean<MathClient>()
 //11946555
 //    val firstSeed: Long = 1L
-    val firstSeed: Long = 2796924L
+//    val firstSeed: Long = 2796924L
+    val firstSeed: Long = 10465119L
+//    val firstSeed: Long = 9610485
 //    val firstSeed: Long = 1_000_000L
 //    val firstSeed: Long = 100_000_000L
 

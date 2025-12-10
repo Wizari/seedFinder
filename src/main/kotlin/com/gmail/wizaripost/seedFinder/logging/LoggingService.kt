@@ -12,9 +12,9 @@ abstract class LoggingService {
     }
 
     // Вспомогательный метод для логирования seed
-    protected fun logSeed(seed: Long?) {
+    protected fun logSeed(seed: Any?) {
         if (seed != null) {
-            log.info("Seed: $seed")
+            log.info("$seed")
         }
     }
 }

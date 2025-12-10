@@ -53,13 +53,13 @@ class MatrixBallsFinder(private val om: ObjectMapper, private val matrixMatcher:
 //    """.trimIndent()
 
         val matrixAsString = """
-        99999
-        99999
-        99999
-        99999
-        99999
-        99999
-        99999
+        00000
+        00000
+        00000
+        00000
+        00000
+        00000
+        00000
         88888
     """.trimIndent()
 
@@ -71,18 +71,19 @@ class MatrixBallsFinder(private val om: ObjectMapper, private val matrixMatcher:
         )
         if (result) {
             println("001 $seed")
+            logSeed("$seed 1x001")
         }
 
 
         val matrixAsString2 = """
-        99999
-        99999
-        99999
-        99999
-        99999
-        99999
+        00000
+        00000
+        00000
+        00000
+        00000
+        00000
         88888
-        99999
+        00000
     """.trimIndent()
 
         if (matrixMatcher.findMatrix(
@@ -93,17 +94,19 @@ class MatrixBallsFinder(private val om: ObjectMapper, private val matrixMatcher:
             )
         ) {
             println("010 $seed")
+            logSeed("$seed 2x010")
+
         }
 
         val matrixAsString3 = """
-        99999
-        99999
-        99999
-        99999
-        99999
+        00000
+        00000
+        00000
+        00000
+        00000
         88888
-        99999
-        99999
+        00000
+        00000
     """.trimIndent()
 
         if (matrixMatcher.findMatrix(
@@ -114,8 +117,126 @@ class MatrixBallsFinder(private val om: ObjectMapper, private val matrixMatcher:
             )
         ) {
             println("000100 $seed")
+            logSeed("$seed 3x100")
         }
 
+
+        if (height > 3 && matrixMatcher.findMatrix(
+                responseHeight = height,
+                responseMatrix = matrix,
+                ourHeight = height,
+                ourMatrix = """
+        00000
+        00000
+        00000
+        00000
+        88888
+        00000
+        00000
+        00000
+    """.trimIndent()
+            )
+        ) {
+            println("1000 $seed")
+            logSeed("$seed 4x1000")
+        }
+
+        if (height > 4 && matrixMatcher.findMatrix(
+                responseHeight = height,
+                responseMatrix = matrix,
+                ourHeight = height,
+                ourMatrix = """
+        00000
+        00000
+        00000
+        88888
+        00000
+        00000
+        00000
+        00000
+    """.trimIndent()
+            )
+        ) {
+            println("10000 $seed")
+            logSeed("$seed 5x10000")
+        }
+
+        if (height > 5 && matrixMatcher.findMatrix(
+                responseHeight = height,
+                responseMatrix = matrix,
+                ourHeight = height,
+                ourMatrix = """
+        00000
+        00000
+        88888
+        00000
+        00000
+        00000
+        00000
+        00000
+    """.trimIndent()
+            )
+        ) {
+            println("100000 $seed")
+            logSeed("$seed 6x100000")
+        }
+            if (height > 6 &&  matrixMatcher.findMatrix(
+                    responseHeight = height,
+                    responseMatrix = matrix,
+                    ourHeight = height,
+                    ourMatrix = """
+        00000
+        88888
+        00000
+        00000
+        00000
+        00000
+        00000
+        00000
+    """.trimIndent()
+                )
+            ) {
+                println("7x $seed")
+                logSeed("$seed 7x")
+            }
+
+
+
+        if (height > 7 && matrixMatcher.findMatrix(
+                responseHeight = height,
+                responseMatrix = matrix,
+                ourHeight = 8,
+                ourMatrix = """
+        88888
+        00000
+        00000
+        00000
+        00000
+        00000
+        00000
+        00000
+    """.trimIndent()
+            )
+        ) {
+            println("8x $seed")
+            logSeed("$seed 8x")
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//s
         if (matrixMatcher.findMatrix(
                 responseHeight = height,
                 responseMatrix = matrix,
@@ -133,6 +254,7 @@ class MatrixBallsFinder(private val om: ObjectMapper, private val matrixMatcher:
             )
         ) {
             println("!!!!!!s $seed")
+            logSeed("!!!!!!s $seed")
         }
         if (matrixMatcher.findMatrix(
                 responseHeight = height,
@@ -151,6 +273,7 @@ class MatrixBallsFinder(private val om: ObjectMapper, private val matrixMatcher:
             )
         ) {
             println("!!!!!!s $seed")
+            logSeed("!!!!!!s $seed")
         }
         if (matrixMatcher.findMatrix(
                 responseHeight = height,
@@ -169,6 +292,7 @@ class MatrixBallsFinder(private val om: ObjectMapper, private val matrixMatcher:
             )
         ) {
             println("!!!!!!s $seed")
+            logSeed("!!!!!!s $seed")
         }
         if (matrixMatcher.findMatrix(
                 responseHeight = height,
@@ -187,6 +311,7 @@ class MatrixBallsFinder(private val om: ObjectMapper, private val matrixMatcher:
             )
         ) {
             println("!!!!!!s $seed")
+            logSeed("!!!!!!s $seed")
         }
 
 
