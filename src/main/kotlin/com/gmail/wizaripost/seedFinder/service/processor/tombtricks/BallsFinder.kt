@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 * [Tomb Tricks] Песочница для поиска Шаров
 */
 
-@Service
+//@Service
 class BallsFinder(private val om: ObjectMapper, private val utils: Utils) : LoggingService(),
     ResultPostProcessor {
     override fun process(key: String, payload: Any) {
@@ -53,8 +53,9 @@ class BallsFinder(private val om: ObjectMapper, private val utils: Utils) : Logg
                 ballsInCurrentReel++
             }
         }
-        if (ballsInCurrentReel == 3) {
-            println("есть шары на 4 риле: $seed")
+        val reel = 3
+        if (ballsInCurrentReel == reel) {
+            println("есть шары на $reel риле: $seed")
         }
     }
 }

@@ -26,5 +26,30 @@ class Utils() {
         }
         return newMatrix
     }
+//
+//    fun findMatrix(
+//        responseHeight: Int,
+//        responseMatrix: List<List<MatrixCell>>,
+//        ourHeight: Int,
+//        ourMatrix: List<List<Int>>
+//    ): Boolean {
+//        if (ourHeight != responseHeight || ourMatrix.size != responseMatrix.size) {
+//            return false
+//        }
+//        for (reel in 0 until responseMatrix.size) {
+//            for (row in 0 until responseMatrix[reel].size) {
+//                if (9 != ourMatrix[reel][row]) {
+//
+//                } else
+//                    if (responseMatrix[reel][row].id != ourMatrix[reel][row]) {
+//                        return false
+//                    }
+//            }
+//
+//
+//        }
+//        return true
+//
+//    }
 }
 

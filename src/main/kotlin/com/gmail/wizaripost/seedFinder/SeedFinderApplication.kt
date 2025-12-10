@@ -26,7 +26,8 @@ fun main(args: Array<String>) {
     val objectMapper = application.getBean<ObjectMapper>()
     val mathClient = application.getBean<MathClient>()
 //11946555
-    val firstSeed: Long = 1L
+//    val firstSeed: Long = 1L
+    val firstSeed: Long = 2796924L
 //    val firstSeed: Long = 1_000_000L
 //    val firstSeed: Long = 100_000_000L
 
@@ -132,7 +133,7 @@ fun parallelSeedProcessingHybrid(
                         } catch (e: Exception) {
                             // Тихая ошибка - просто логируем
                             if (index % 100 == 0) { // Логируем только каждый 100-й батч
-                                println("Батч $index: ошибка на сиде $seed")
+                                println("Батч $index: ошибка $e на сиде $seed")
                             }
                         }
                     }
