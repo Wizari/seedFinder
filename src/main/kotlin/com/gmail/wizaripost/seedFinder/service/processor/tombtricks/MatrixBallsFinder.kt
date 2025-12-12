@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service
          */
 */
 
-@Service
+//@Service
 class MatrixBallsFinder(private val om: ObjectMapper, private val matrixMatcher: MatrixMatcher) : LoggingService(),
     ResultPostProcessor {
     override fun process(key: String, payload: Any) {
@@ -60,7 +60,7 @@ class MatrixBallsFinder(private val om: ObjectMapper, private val matrixMatcher:
         00000
         00000
         00000
-        88888
+        08000
     """.trimIndent()
 
         val result = matrixMatcher.findMatrix(
