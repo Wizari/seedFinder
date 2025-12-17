@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 */
 
 //@Service
-class BombAndPrizeUpAndSpinsUpFinder(private val om: ObjectMapper, private val utils: Utils) : LoggingService(),
+class BallsFreePlusGoldenFinder(private val om: ObjectMapper, private val utils: Utils) : LoggingService(),
     ResultPostProcessor {
     override fun process(key: String, payload: Any) {
         if (key != "FreeSpin") {
@@ -28,12 +28,10 @@ class BombAndPrizeUpAndSpinsUpFinder(private val om: ObjectMapper, private val u
             }
         }
 
-
         val seed = resp.result?.gameState?.private?.modelCore?.seed //TODO debug
-//        val matrix = resp.result?.gameState?.public?.brilliantSpins?.matrix
-//        val height = resp.result?.gameState?.public?.dynMatrix?.height?.get(0)
+        val matrixBalls = resp.result?.gameState?.public?.brilliantSpins?.matrix
+//        val heightBalls = resp.result?.gameState?.public?.dynMatrix?.height?.get(0)
         val height = resp.result?.gameState?.public?.brilliantSpins?.height
-
         val transfer = resp.result?.gameState?.public?.brilliantSpins?.transfers?.firstOrNull()
 
         if (transfer == null) {
@@ -45,25 +43,29 @@ class BombAndPrizeUpAndSpinsUpFinder(private val om: ObjectMapper, private val u
         if (matrix == null || height == null) {
             return
         }
+        if (matrixBalls == null) {
+            return
+        }
+        val newBallsMatrix = utils.getVisibleMatrix(height, matrixBalls)
         val newMatrix = utils.getVisibleMatrix(height, matrix)
 
         var freeSpin = 0
         var prizeUp = 0
         var bomb = 0
+        var golden = 0
+        var freeBalls = 0
+
         for (i in 0..4) {  // только индексы 0,1,2,3
-            val currentReel = newMatrix[i]
+            val currentReel = newBallsMatrix[i]
             for (symbol in currentReel) {
                 val ballId = symbol.id
                 when (ballId) {
-                    7 -> {
-                        freeSpin++
-                    }  // wildcard - любой символ
-                    8 -> {         // маска 1-6
-                        prizeUp++
+                    1 -> { //freeBall
+                        golden++
                     }
 
-                    9 -> {         // маска 1-6
-                        bomb++
+                    6 -> { //golden
+                        freeBalls++
                     }
 
                     else -> {
@@ -72,16 +74,42 @@ class BombAndPrizeUpAndSpinsUpFinder(private val om: ObjectMapper, private val u
                 }
             }
         }
-        if (prizeUp >= 2) {
-            println("[prizeUp >= 2][$prizeUp]: $seed")
-            logSeed("[FirstAction][prizeUp >= 2][$prizeUp]: $seed")
+        if (freeBalls == 0 || golden == 0) {
+            return
         }
-//        if (freeSpin != 0 && prizeUp != 0 && bomb != 0) {
-//            println("[7/8/9][$freeSpin/$prizeUp/$bomb]: $seed")
-//            logSeed("[7/8/9][$freeSpin/$prizeUp/$bomb]: $seed")
-//        }
 
+        for (i in 0..4) {  // только индексы 0,1,2,3
+            val currentReel = newMatrix[i]
+            for (symbol in currentReel) {
+                val ballId = symbol.id
+                when (ballId) {
+//                    1 -> {
+//                        goldeb++
+//                    }
+//                    5 -> {
+//                        freeBalls++
+//                    }
+//                    7 -> {
+//                        freeSpin++
+//                    }
+                    8 -> {
+                        prizeUp++
+                    }
+//
+//                    9 -> {
+//                        bomb++
+//                    }
 
+                    else -> {
+
+                    }
+                }
+            }
+        }
+        if (prizeUp >= 1) {
+            println("[fre+golden+prizeup]: $seed")
+            logSeed("[fre+golden+prizeup]: $seed")
+        }
     }
 
 }
