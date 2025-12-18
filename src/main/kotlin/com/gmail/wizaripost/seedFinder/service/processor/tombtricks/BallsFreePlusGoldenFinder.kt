@@ -23,7 +23,7 @@ class BallsFreePlusGoldenFinder(private val om: ObjectMapper, private val utils:
         val resp: GameStateResponse = om.readValue(payload as String)
         val amount = resp.result?.gameState?.public?.brilliantSpins?.amountResetSpins
         if (amount != null) {
-            if (amount <= 4) {
+            if (amount != 4) {
                 return
             }
         }
