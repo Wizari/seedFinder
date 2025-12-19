@@ -37,18 +37,18 @@ class TargetsBallsFinder(private val om: ObjectMapper, private val utils: Utils)
         val amount = resp.result?.gameState?.public?.brilliantSpins?.amountResetSpins
         if (amount != null) {
 //            if (amount <= 3) {
-            if (amount != 4) {
+            if (amount == 4) {
                 return
             }
         }
 
         val seed = resp.result?.gameState?.private?.modelCore?.seed //TODO debug
         val matrixBalls = resp.result?.gameState?.public?.brilliantSpins?.matrix
-//        val height = resp.result?.gameState?.public?.dynMatrix?.height?.get(0)
+        val height = resp.result?.gameState?.public?.dynMatrix?.height?.get(0)
         val heightBalls = resp.result?.gameState?.public?.brilliantSpins?.height
-//        if (matrixBalls == null || height == null) {
-//            return
-//        }
+        if (matrixBalls == null || height == null) {
+            return
+        }
 
         val transfer = resp.result?.gameState?.public?.brilliantSpins?.transfers?.firstOrNull()
         if (transfer == null || heightBalls == null) {
@@ -59,7 +59,7 @@ class TargetsBallsFinder(private val om: ObjectMapper, private val utils: Utils)
             return
         }
         val newMatrix = utils.getVisibleMatrix(heightBalls, matrixTransfers)
-//        val newBallsMatrix = utils.getVisibleMatrix(height, matrixBalls)
+        val newBallsMatrix = utils.getVisibleMatrix(height, matrixBalls)
 
         var golden = 0
         var superBall = 0
@@ -119,20 +119,20 @@ class TargetsBallsFinder(private val om: ObjectMapper, private val utils: Utils)
             }
         }
 //        if (count == 6) {
-            if (superBall != 0) {
+            if (superBall >= 2) {
                 println("[superBallX$superBall]: $seed")
                 logSeed("[superBallX$superBall]: $seed")
             }
-            if (megaBall != 0) {
+            if (megaBall >= 2) {
                 println("[megaBallX$megaBall]: $seed")
                 logSeed("[megaBallX$megaBall]: $seed")
             }
-            if (major != 0) {
+            if (major >= 2) {
                 println("[majorX$major]: $seed")
                 logSeed("[majorX$major]: $seed")
             }
-            if (grand != 0) {
-                println("[grandX$major]: $seed")
+            if (grand >= 2) {
+                println("[grandX$grand]: $seed")
                 logSeed("[grandX$major]: $seed")
             }
 //        }

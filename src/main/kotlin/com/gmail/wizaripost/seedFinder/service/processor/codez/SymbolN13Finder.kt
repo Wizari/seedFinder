@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 * [Code Z] Найти сид с Х2 шотами[13] символами
 */
 
-@Service
+//@Service
 class SymbolN13Finder(private val om: ObjectMapper, private val utils: Utils) : LoggingService(),
     ResultPostProcessor {
     override fun process(key: String, payload: Any) {
