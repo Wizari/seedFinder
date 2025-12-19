@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service
 
 
 /*
-* [Tomb Tricks] Песочница для поиска Шаров
+* [Tomb Tricks] 1 особый шар (surep, mega, grand, major) при старте голден спинов:
+
+
 *    * 9 - bomb
      * 8 - prizeUp
      * 7 - addSpins
@@ -24,39 +26,40 @@ import org.springframework.stereotype.Service
 */
 
 //@Service
-class BallsFinder(private val om: ObjectMapper, private val utils: Utils) : LoggingService(),
+class TargetsBallsFinder(private val om: ObjectMapper, private val utils: Utils) : LoggingService(),
     ResultPostProcessor {
     override fun process(key: String, payload: Any) {
-        if (key != "Spin") {
+        if (key != "FreeSpin") {
+//        if (key != "Spin") {
             return
         }
         val resp: GameStateResponse = om.readValue(payload as String)
         val amount = resp.result?.gameState?.public?.brilliantSpins?.amountResetSpins
-//        if (amount != null) {
-//            if (amount <= 5) {
-////            if (amount != 4) {
-//                return
-//            }
-//        }
+        if (amount != null) {
+//            if (amount <= 3) {
+            if (amount != 4) {
+                return
+            }
+        }
 
         val seed = resp.result?.gameState?.private?.modelCore?.seed //TODO debug
         val matrixBalls = resp.result?.gameState?.public?.brilliantSpins?.matrix
-        val height = resp.result?.gameState?.public?.dynMatrix?.height?.get(0)
+//        val height = resp.result?.gameState?.public?.dynMatrix?.height?.get(0)
         val heightBalls = resp.result?.gameState?.public?.brilliantSpins?.height
-        if (matrixBalls == null || height == null) {
-            return
-        }
-
-//        val transfer = resp.result?.gameState?.public?.brilliantSpins?.transfers?.firstOrNull()
-//        if (transfer == null) {
+//        if (matrixBalls == null || height == null) {
 //            return
 //        }
+
+        val transfer = resp.result?.gameState?.public?.brilliantSpins?.transfers?.firstOrNull()
+        if (transfer == null || heightBalls == null) {
+            return
+        }
         val matrixTransfers = resp.result?.gameState?.public?.brilliantSpins?.transfers?.get(0)?.matrix
         if (matrixTransfers == null) {
             return
         }
-        val newBallsMatrix = utils.getVisibleMatrix(height, matrixBalls)
-        val newMatrix = utils.getVisibleMatrix(height, matrixTransfers)
+        val newMatrix = utils.getVisibleMatrix(heightBalls, matrixTransfers)
+//        val newBallsMatrix = utils.getVisibleMatrix(height, matrixBalls)
 
         var golden = 0
         var superBall = 0
@@ -72,12 +75,12 @@ class BallsFinder(private val om: ObjectMapper, private val utils: Utils) : Logg
 
         for (i in 0..4) {  // только индексы 0,1,2,3
 //            val currentReel = newMatrix[i]
-            val currentReel = matrixTransfers[i]
+            val currentReel = newMatrix[i]
             for (symbol in currentReel) {
                 val ballId = symbol.id
-                if (ballId != 0) {
-                    count++
-                }
+//                if (ballId != 0) {
+//                    count++
+//                }
                 when (ballId) {
 //                    1 -> {
 //                        golden++
@@ -115,7 +118,7 @@ class BallsFinder(private val om: ObjectMapper, private val utils: Utils) : Logg
                 }
             }
         }
-        if (count == 6) {
+//        if (count == 6) {
             if (superBall != 0) {
                 println("[superBallX$superBall]: $seed")
                 logSeed("[superBallX$superBall]: $seed")
@@ -132,52 +135,7 @@ class BallsFinder(private val om: ObjectMapper, private val utils: Utils) : Logg
                 println("[grandX$major]: $seed")
                 logSeed("[grandX$major]: $seed")
             }
-        }
+//        }
     }
 
 }
-
-
-//    override fun process(key: String, payload: Any) {
-//        if (key != "Spin") {
-//            return
-//        }
-//        val resp: GameStateResponse = om.readValue(payload as String)
-//        val seed = resp.result?.gameState?.private?.modelCore?.seed
-//        val matrix = resp.result?.gameState?.public?.brilliantSpins?.matrix
-//        val height = resp.result?.gameState?.public?.dynMatrix?.height?.get(0)
-//
-//        if (matrix == null || height == null) {
-//            return
-//        }
-//        val newMatrix = utils.getVisibleMatrix(height, matrix)
-//        var totalBalls = 0
-//
-//        for (i in 0..4) {  // только индексы 0,1,2,3
-//            val currentReel = newMatrix[i]
-//            for (symbol in currentReel) {
-//                val ballId = symbol.id
-//                if (ballId == 1 || ballId == 2 || ballId == 3 || ballId == 4 || ballId == 5 || ballId == 6) {
-//                    totalBalls++
-//                }
-//            }
-//        }
-//
-//        if (totalBalls < 1) {
-//            return
-//        }
-//
-//        var ballsInCurrentReel = 0
-//        for (row in newMatrix[0].indices) {
-//            val ballId = newMatrix[3][row].id
-//            if (ballId == 1 || ballId == 2 || ballId == 3 || ballId == 4 || ballId == 5 || ballId == 6) {
-////            if (ballId == 6) {
-//                ballsInCurrentReel++
-//            }
-//        }
-//        val reel = 3
-//        if (ballsInCurrentReel == reel) {
-//            println("есть шары на $reel риле: $seed")
-//        }
-//    }
-//}

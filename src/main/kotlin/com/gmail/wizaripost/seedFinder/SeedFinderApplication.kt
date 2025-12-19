@@ -25,6 +25,8 @@ fun main(args: Array<String>) {
     val argsProcessor = application.getBean<ArgsProcessor>()
     val objectMapper = application.getBean<ObjectMapper>()
     val mathClient = application.getBean<MathClient>()
+//    val gameId = "RumblingRun-variation-95"
+    val gameId = "Merlin-variation-0"
 //11946555
     val firstSeed: Long = 1L
 //    val firstSeed: Long = 4713146L
@@ -48,7 +50,7 @@ fun main(args: Array<String>) {
         seedRunner = seedRunner,
         mathClient = mathClient,
         objectMapper = objectMapper,
-        gameId = "RumblingRun-variation-95",
+        gameId = gameId,
         firstSeed = firstSeed,
         lastSeed = lastSeed,
 //        concurrency = 28 // Используйте все 28 ядер
@@ -60,7 +62,7 @@ fun main(args: Array<String>) {
 //        seedRunner = seedRunner,
 //        mathClient = mathClient,
 //        objectMapper = objectMapper,
-//        gameId = "RumblingRun-variation-95",
+//        gameId = gameId,
 //        firstSeed = firstSeed,
 //        lastSeed = lastSeed,
 //    )
