@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service
      * 1 - GoldenBall
      * 0 - нет шара
 */
-
+//TODO Не пашет
 //@Service
 class BallsFinder(private val om: ObjectMapper, private val utils: Utils) : LoggingService(),
     ResultPostProcessor {
@@ -51,7 +51,13 @@ class BallsFinder(private val om: ObjectMapper, private val utils: Utils) : Logg
 //        if (transfer == null) {
 //            return
 //        }
+        println("${height}")
+
+        println("123123123")
         val matrixTransfers = resp.result?.gameState?.public?.brilliantSpins?.transfers?.get(0)?.matrix
+        println("123123123")
+
+        println("${matrixTransfers?.size}")
         if (matrixTransfers == null) {
             return
         }
@@ -94,20 +100,20 @@ class BallsFinder(private val om: ObjectMapper, private val utils: Utils) : Logg
                     5 -> {
                         grand++
                     }
-//                    6 -> {
-//                        freeBalls++
-//                    }
+                    6 -> {
+                        freeBalls++
+                    }
 
-//                    7 -> {
-//                        upSpin++
-//                    }
-//                    8 -> {
-//                        prizeUp++
-//                    }
-//
-//                    9 -> {
-//                        bomb++
-//                    }
+                    7 -> {
+                        upSpin++
+                    }
+                    8 -> {
+                        prizeUp++
+                    }
+
+                    9 -> {
+                        bomb++
+                    }
 
                     else -> {
 
@@ -115,24 +121,62 @@ class BallsFinder(private val om: ObjectMapper, private val utils: Utils) : Logg
                 }
             }
         }
+//        if (count == 6) {
+//            if (superBall != 0) {
+//                println("[superBallX$superBall]: $seed")
+//                logSeed("[superBallX$superBall]: $seed")
+//            }
+//            if (megaBall != 0) {
+//                println("[megaBallX$megaBall]: $seed")
+//                logSeed("[megaBallX$megaBall]: $seed")
+//            }
+//            if (major != 0) {
+//                println("[majorX$major]: $seed")
+//                logSeed("[majorX$major]: $seed")
+//            }
+//            if (grand != 0) {
+//                println("[grandX$major]: $seed")
+//                logSeed("[grandX$major]: $seed")
+//            }
+//        }
+
+//        var golden = 0
+//        var superBall = 0
+//        var megaBall = 0
+//        var major = 0
+//        var grand = 0
+//        var freeBalls = 0
+//        var upSpin = 0
+//        var prizeUp = 0
+//        var bomb = 0
+
         if (count == 6) {
-            if (superBall != 0) {
-                println("[superBallX$superBall]: $seed")
-                logSeed("[superBallX$superBall]: $seed")
+            if (major == 0 && grand == 0 && freeBalls == 0 && upSpin == 0 && prizeUp == 0 &&  bomb == 0) {
+                if ((superBall == 0 && megaBall == 1) || (superBall == 1 && megaBall == 0)) {
+                    println("[fast golden (+super or mega)$superBall]: $seed")
+                    logSeed("[fast golden (+super or mega)[$superBall]: $seed")
+                }
             }
-            if (megaBall != 0) {
-                println("[megaBallX$megaBall]: $seed")
-                logSeed("[megaBallX$megaBall]: $seed")
-            }
-            if (major != 0) {
-                println("[majorX$major]: $seed")
-                logSeed("[majorX$major]: $seed")
-            }
-            if (grand != 0) {
-                println("[grandX$major]: $seed")
-                logSeed("[grandX$major]: $seed")
-            }
+
+//                if (superBall != 0) {
+//                println("[superBallX$superBall]: $seed")
+//                logSeed("[superBallX$superBall]: $seed")
+//            }
+//            if (megaBall != 0) {
+//                println("[megaBallX$megaBall]: $seed")
+//                logSeed("[megaBallX$megaBall]: $seed")
+//            }
+//            if (major != 0) {
+//                println("[majorX$major]: $seed")
+//                logSeed("[majorX$major]: $seed")
+//            }
+//            if (grand != 0) {
+//                println("[grandX$major]: $seed")
+//                logSeed("[grandX$major]: $seed")
+//            }
         }
+
+
     }
 
 }

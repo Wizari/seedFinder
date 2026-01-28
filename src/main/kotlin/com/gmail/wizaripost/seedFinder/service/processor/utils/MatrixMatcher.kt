@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class MatrixMatcher {
-
+//todo НУЖНО ПЕРЕДЕЛАТЬ
     /**
      * 9 - любой символ или шар
      * 8 - любой шар

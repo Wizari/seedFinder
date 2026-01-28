@@ -25,8 +25,8 @@ fun main(args: Array<String>) {
     val argsProcessor = application.getBean<ArgsProcessor>()
     val objectMapper = application.getBean<ObjectMapper>()
     val mathClient = application.getBean<MathClient>()
-    val gameId = "RumblingRun-variation-95"
-//    val gameId = "Merlin-variation-0"
+//    val gameId = "RumblingRun-variation-95"
+    val gameId = "Merlin-variation-0"
 //11946555
     val firstSeed: Long = 1L
 //    val firstSeed: Long = 4713146L
@@ -37,7 +37,7 @@ fun main(args: Array<String>) {
 //    val firstSeed: Long = 1_000_000L
 //    val firstSeed: Long = 100_000_000L
 
-    val lastSeed: Long = 100_000_000L
+    val lastSeed: Long = 1_000_000L
 
 //    val firstSeed: Long = 2500L
 //    val lastSeed: Long = 100L
@@ -183,7 +183,8 @@ fun calculateOptimalBatchSize(totalSeeds: Long, concurrency: Int): Int {
         totalSeeds < 10000 -> 50
         totalSeeds < 100000 -> 100
         totalSeeds < 1000000 -> 500
-        else -> 1000
+        else -> 500
+//        else -> 1000
     }
     return maxOf(baseSize, concurrency * 10) // Но не меньше чем потоков * 10
 }
