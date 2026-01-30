@@ -4,6 +4,7 @@ package com.gmail.wizaripost.seedFinder.client
 import com.gmail.wizaripost.seedFinder.dto.CloseRequest
 import com.gmail.wizaripost.seedFinder.dto.FreeSpinRequest
 import com.gmail.wizaripost.seedFinder.dto.NewGameRequest
+import com.gmail.wizaripost.seedFinder.dto.RiskSpinRequest
 import com.gmail.wizaripost.seedFinder.dto.SpinRequest
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.PathVariable
@@ -34,6 +35,12 @@ interface MathClient {
     fun executeFreeSpin(
         @PathVariable gameName: String,
         request: FreeSpinRequest
+    ): String
+
+    @PostMapping("/{gameName}/execute")
+    fun executeRisk(
+        @PathVariable gameName: String,
+        request: RiskSpinRequest
     ): String
 
     @PostMapping("/{gameName}/execute")

@@ -28,8 +28,8 @@ fun main(args: Array<String>) {
 //    val gameId = "RumblingRun-variation-95"
     val gameId = "Merlin-variation-0"
 //11946555
-    val firstSeed: Long = 1L
-//    val firstSeed: Long = 4713146L
+//    val firstSeed: Long = 1L
+   val firstSeed: Long = 2749L
 //    val firstSeed: Long = 250730L
 //    val firstSeed: Long = 2796924L
 //    val firstSeed: Long = 10465119L
@@ -37,7 +37,7 @@ fun main(args: Array<String>) {
 //    val firstSeed: Long = 1_000_000L
 //    val firstSeed: Long = 100_000_000L
 
-    val lastSeed: Long = 1_000_000L
+    val lastSeed: Long = 100_000_000L
 
 //    val firstSeed: Long = 2500L
 //    val lastSeed: Long = 100L
@@ -46,26 +46,26 @@ fun main(args: Array<String>) {
     // Вызов метода с параллельной обработкой
 
 
-    parallelSeedProcessingHybrid(
-        seedRunner = seedRunner,
-        mathClient = mathClient,
-        objectMapper = objectMapper,
-        gameId = gameId,
-        firstSeed = firstSeed,
-        lastSeed = lastSeed,
-//        concurrency = 28 // Используйте все 28 ядер
-        concurrency = 10 // Используйте все 28 ядер
-    )
-
-
-//    simpleFor(
+//    parallelSeedProcessingHybrid(
 //        seedRunner = seedRunner,
 //        mathClient = mathClient,
 //        objectMapper = objectMapper,
 //        gameId = gameId,
 //        firstSeed = firstSeed,
 //        lastSeed = lastSeed,
+////        concurrency = 28 // Используйте все 28 ядер
+//        concurrency = 10 // Используйте все 28 ядер
 //    )
+
+
+    simpleFor(
+        seedRunner = seedRunner,
+        mathClient = mathClient,
+        objectMapper = objectMapper,
+        gameId = gameId,
+        firstSeed = firstSeed,
+        lastSeed = lastSeed,
+    )
 
 }
 
@@ -134,7 +134,7 @@ fun parallelSeedProcessingHybrid(
 
                     for (seed in batch) {
                         try {
-                            seedRunner.run(gameId, seed.toULong(), configResponse)
+                            seedRunner.run(gameId, createSeed(seed, seed), configResponse)
                             batchSuccessCount++
                         } catch (e: Exception) {
                             // Тихая ошибка - просто логируем
@@ -189,6 +189,13 @@ fun calculateOptimalBatchSize(totalSeeds: Long, concurrency: Int): Int {
     return maxOf(baseSize, concurrency * 10) // Но не меньше чем потоков * 10
 }
 
+private fun createSeed(highSeed: Long, lowSeed: Long): ULong{
+    val high = (highSeed shl 32).toULong()
+    val low = lowSeed.toULong() and 0xffffffffU
+    val seed: ULong = high or low
+    return seed
+}
+
 fun simpleFor(
     seedRunner: SeedRunner,
     mathClient: MathClient,
@@ -200,7 +207,8 @@ fun simpleFor(
     val responseGetConfigString = mathClient.getConfig(gameId)
     val configResponse: ConfigResponse = objectMapper.readValue(responseGetConfigString)
     for (i in firstSeed..lastSeed) {
-        seedRunner.run(gameId, i.toULong(), configResponse)
+//        seedRunner.run(gameId, i.toULong(), configResponse)
+        seedRunner.run(gameId, createSeed(i, i), configResponse)
     }
 }
 

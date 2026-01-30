@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 * [Code Z] 6 of a kind in free game
 */
 
-@Service
+//@Service
 class SixOfAKindInFreeGame(private val om: ObjectMapper, private val utils: Utils) : LoggingService(),
     ResultPostProcessor {
     override fun process(key: String, payload: Any) {

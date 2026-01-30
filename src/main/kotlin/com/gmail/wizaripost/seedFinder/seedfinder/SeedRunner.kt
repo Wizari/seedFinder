@@ -25,7 +25,8 @@ class SeedRunner(
             objectMapper.readValue("{ \"result\": { \"private\": { \"seed\": $seed }, \"public\": { \"actions\": [  \"Spin\" ] }}}")
         var action = "Spin"
         do {
-            val stage = roundStage.find { it.valid(action) } ?: throw RuntimeException("Unknow stage $action")
+//            val stage = roundStage.find { it.valid(action) } ?: throw RuntimeException("Unknow stage $action")
+            val stage = roundStage.findLast { it.valid(action) } ?: throw RuntimeException("Unknown stage $action")
             val gameResponse = response
                 ?: throw RuntimeException("Response can't be null")
             val stageResponse =
