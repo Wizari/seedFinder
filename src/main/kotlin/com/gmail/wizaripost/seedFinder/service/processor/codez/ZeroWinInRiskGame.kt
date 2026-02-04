@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap
 * [Code Z] 30.01.26 Поиск коротких Gamble
 */
 
-@Service
+//@Service
 class ZeroWinInRiskGame(
     private val om: ObjectMapper,
     private val utils: Utils,

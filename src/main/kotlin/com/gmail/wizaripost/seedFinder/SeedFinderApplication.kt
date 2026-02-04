@@ -25,11 +25,19 @@ fun main(args: Array<String>) {
     val argsProcessor = application.getBean<ArgsProcessor>()
     val objectMapper = application.getBean<ObjectMapper>()
     val mathClient = application.getBean<MathClient>()
-//    val gameId = "RumblingRun-variation-95"
-    val gameId = "Merlin-variation-0"
+    val gameId = "RumblingRun-variation-95"
+//    val gameId = "Merlin-variation-0"
 //11946555
-//    val firstSeed: Long = 1L
-   val firstSeed: Long = 2749L
+    val firstSeed: Long = 1L
+//   val firstSeed: Long = 2749L
+//   val firstSeed: Long = 2315976L
+//   val firstSeed: Long = 7100347L
+//   val firstSeed: Long = 10094347L
+//   val firstSeed: Long = 16227847L
+//   val firstSeed: Long = 74_959_847L
+//   val firstSeed: Long = 145849347L
+//   val firstSeed: Long = 174593347L
+//   val firstSeed: Long = 476_141_847L //SesFindZeroWin LAST
 //    val firstSeed: Long = 250730L
 //    val firstSeed: Long = 2796924L
 //    val firstSeed: Long = 10465119L
@@ -38,6 +46,7 @@ fun main(args: Array<String>) {
 //    val firstSeed: Long = 100_000_000L
 
     val lastSeed: Long = 100_000_000L
+//    val lastSeed: Long = 700_000_000L
 
 //    val firstSeed: Long = 2500L
 //    val lastSeed: Long = 100L
@@ -46,26 +55,26 @@ fun main(args: Array<String>) {
     // Вызов метода с параллельной обработкой
 
 
-//    parallelSeedProcessingHybrid(
-//        seedRunner = seedRunner,
-//        mathClient = mathClient,
-//        objectMapper = objectMapper,
-//        gameId = gameId,
-//        firstSeed = firstSeed,
-//        lastSeed = lastSeed,
-////        concurrency = 28 // Используйте все 28 ядер
-//        concurrency = 10 // Используйте все 28 ядер
-//    )
-
-
-    simpleFor(
+    parallelSeedProcessingHybrid(
         seedRunner = seedRunner,
         mathClient = mathClient,
         objectMapper = objectMapper,
         gameId = gameId,
         firstSeed = firstSeed,
         lastSeed = lastSeed,
+//        concurrency = 28 // Используйте все 28 ядер
+        concurrency = 10 // Используйте все 28 ядер
     )
+
+
+//    simpleFor(
+//        seedRunner = seedRunner,
+//        mathClient = mathClient,
+//        objectMapper = objectMapper,
+//        gameId = gameId,
+//        firstSeed = firstSeed,
+//        lastSeed = lastSeed,
+//    )
 
 }
 
@@ -117,7 +126,9 @@ fun parallelSeedProcessingHybrid(
                     if (current > lastUpdate) {
                         val percent = String.format("%.1f", current * 100.0 / total)
                         val elapsedMin = (System.currentTimeMillis() - executionStartTime) / 60000
-                        println("[${elapsedMin}мин] Прогресс: ${percent}% ($current/$total)")
+                        println("[${elapsedMin}мин] ${percent}% ($current/$total) " +
+                                "Init seed: $firstSeed; " +
+                                "cur seed: ${current+firstSeed}")
                         lastUpdate = current
                     }
                 }

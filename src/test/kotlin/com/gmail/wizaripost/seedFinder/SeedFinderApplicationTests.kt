@@ -102,8 +102,9 @@ class SeedFinderApplicationTests {
 		println("10077 " + createSeed2(10077, 10077).toString())
 //		println("createSeed2 " + createSeed2(1, 1).toString())
 //		println("createSeed2 " + createSeed2(maxUInt, 3).toString())
-
 //		-5835649841802651490
+		val sseed2 = -8151592353418518496
+		println("seed search" + splitSeed(sseed2.toULong()).toString())
 	}
 
 
