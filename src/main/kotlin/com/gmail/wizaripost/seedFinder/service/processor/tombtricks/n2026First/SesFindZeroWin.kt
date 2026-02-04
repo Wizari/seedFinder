@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap
      * 0 - нет шара
 */
 
-@Service
+//@Service
 class SesFindZeroWin(
     private val om: ObjectMapper,
     private val utils: Utils

@@ -25,8 +25,8 @@ fun main(args: Array<String>) {
     val argsProcessor = application.getBean<ArgsProcessor>()
     val objectMapper = application.getBean<ObjectMapper>()
     val mathClient = application.getBean<MathClient>()
-    val gameId = "RumblingRun-variation-95"
-//    val gameId = "Merlin-variation-0"
+//    val gameId = "RumblingRun-variation-95"
+    val gameId = "Merlin-variation-0"
 //11946555
     val firstSeed: Long = 1L
 //   val firstSeed: Long = 2749L
@@ -37,7 +37,8 @@ fun main(args: Array<String>) {
 //   val firstSeed: Long = 74_959_847L
 //   val firstSeed: Long = 145849347L
 //   val firstSeed: Long = 174593347L
-//   val firstSeed: Long = 476_141_847L //SesFindZeroWin LAST
+//   val firstSeed: Long = 476_141_847L
+//   val firstSeed: Long = 514_927_347L //SesFindZeroWin LAST
 //    val firstSeed: Long = 250730L
 //    val firstSeed: Long = 2796924L
 //    val firstSeed: Long = 10465119L
