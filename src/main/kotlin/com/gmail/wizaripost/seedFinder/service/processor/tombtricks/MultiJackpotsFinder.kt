@@ -38,7 +38,7 @@ class MultiJackpotsFinder(private val om: ObjectMapper) : LoggingService(), Resu
         }
 
         val seed = resp.result?.gameState?.private?.modelCore?.seed
-        logSeed(seed)
+        logSeed("$seed")
         println(seed)
     }
 }

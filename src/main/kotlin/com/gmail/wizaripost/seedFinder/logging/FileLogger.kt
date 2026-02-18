@@ -127,7 +127,8 @@ class FileLogger {
 
                 // Форматируем
                 val timestamp = LocalDateTime.now().format(dateFormatter)
-                val logMessage = "[$timestamp] [$level] $message"
+//                val logMessage = "[$timestamp] [$level] $message"
+                val logMessage = "$message"
 
                 // Пишем в файл
                 writer?.println(logMessage)

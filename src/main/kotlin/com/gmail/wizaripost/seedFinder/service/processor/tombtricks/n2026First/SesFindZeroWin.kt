@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 
 /*
-* [Tomb Tricks] 2 особых шар (surep, mega, grand, major) на закруте голден спинов
+* [Tomb Tricks] Ses Find Zero Win FreeSpin
 
 
 *    * 9 - bomb
@@ -35,7 +35,7 @@ class SesFindZeroWin(
     // ConcurrentHashMap потокобезопасен
 //    private val sessionMatrices = ConcurrentHashMap<Long, List<List<MatrixCell>>>()
 //    private val sessionFreeGameCount = ConcurrentHashMap<Long, Int>()
-    private val sessionFreeGameCount = ConcurrentHashMap<Long, Int>(15_000_000, 0.9f)
+    private val sessionFreeGameCount = ConcurrentHashMap<Long, Int>(120_000_000, 0.9f)
 
 
     override fun process(key: String, payload: Any) {
@@ -62,7 +62,8 @@ class SesFindZeroWin(
 //            val seed = resp.result?.gameState?.private?.modelCore?.seed?.or(0L)
             val count = sessionFreeGameCount[seed!!] ?: 0
             if (count >= 25) {
-                println("[$count] $seed")
+                println("***[$count] $seed")
+                logSeed("[$count] $seed")
             }
         }
 

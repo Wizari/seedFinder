@@ -33,7 +33,7 @@ class BigSymbolFirstFreeSpinFinder(private val om: ObjectMapper) :LoggingService
             return
         }
 
-        logSeed(seed)
+        logSeed("$seed")
         println(resp.result.gameState.private?.modelCore?.seed)
     }
 }
