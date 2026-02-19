@@ -25,10 +25,13 @@ fun main(args: Array<String>) {
     val argsProcessor = application.getBean<ArgsProcessor>()
     val objectMapper = application.getBean<ObjectMapper>()
     val mathClient = application.getBean<MathClient>()
-//    val gameId = "RumblingRun-variation-95"
-    val gameId = "Merlin-variation-0"
+    val gameId = "RumblingRun-variation-95"
+//    val gameId = "Merlin-variation-0"
+//    val gameId = "Muertos-variation-95"
 //11946555
     val firstSeed: Long = 1L
+//    val firstSeed: Long = 387068025L
+//    val firstSeed: Long = 500127L
 //   val firstSeed: Long = 2749L
 //   val firstSeed: Long = 2315976L
 //   val firstSeed: Long = 7100347L
@@ -47,7 +50,8 @@ fun main(args: Array<String>) {
 //    val firstSeed: Long = 1_000_000L
 //    val firstSeed: Long = 100_000_000L
 
-    val lastSeed: Long = 100_000_000L
+    val lastSeed: Long = 500129L
+//    val lastSeed: Long = 387068026L
 //    val lastSeed: Long = 1_300_000_000L
 //    val lastSeed: Long = 700_000_000L
 

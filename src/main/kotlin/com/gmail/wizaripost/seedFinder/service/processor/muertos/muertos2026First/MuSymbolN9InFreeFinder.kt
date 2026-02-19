@@ -1,4 +1,4 @@
-package com.gmail.wizaripost.seedFinder.service.processor.codez.codez2026First
+package com.gmail.wizaripost.seedFinder.service.processor.muertos.muertos2026First
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -6,7 +6,6 @@ import com.gmail.wizaripost.seedFinder.dto.GameStateResponse
 import com.gmail.wizaripost.seedFinder.logging.LoggingService
 import com.gmail.wizaripost.seedFinder.service.processor.ResultPostProcessor
 import com.gmail.wizaripost.seedFinder.service.processor.utils.Utils
-import org.springframework.stereotype.Service
 
 
 /*
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Service
 */
 
 //@Service
-class SymbolN9InFreeFinder(private val om: ObjectMapper, private val utils: Utils) : LoggingService(),
+class MuSymbolN9InFreeFinder(private val om: ObjectMapper, private val utils: Utils) : LoggingService(),
     ResultPostProcessor {
     override fun process(key: String, payload: Any) {
         if (key == "Spin") {
@@ -24,13 +23,16 @@ class SymbolN9InFreeFinder(private val om: ObjectMapper, private val utils: Util
 
 //        val matrix = data.gameRound?.gameState?.Cascade?.stg[0].cntnt
         val matrices = resp.result?.gameState?.public?.Cascade?.stg
-
-
         if (matrices == null) {
             return
         }
+        val winInThisSpin = resp.result?.gameState?.public?.modelCore?.resultS
+        if (winInThisSpin == 0 || winInThisSpin == null) {
+            return
+        }
+
         var symbol = 0
-        for (matrix in matrices) {
+        for (matrix in matrices.dropLast(1)) {
             symbol = 0
             for (reel in matrix.cntnt!!) {
                 for (row in reel) {
@@ -42,7 +44,7 @@ class SymbolN9InFreeFinder(private val om: ObjectMapper, private val utils: Util
             }
 
         }
-        if (symbol >= 2) {
+        if (symbol >= 6) {
             val seed = resp.result?.gameState?.private?.modelCore?.seed
             println("[$symbol] $seed")
             logSeed("[$symbol] $seed")

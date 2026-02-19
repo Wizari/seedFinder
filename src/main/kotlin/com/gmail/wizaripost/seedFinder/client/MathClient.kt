@@ -4,6 +4,7 @@ package com.gmail.wizaripost.seedFinder.client
 import com.gmail.wizaripost.seedFinder.dto.CloseRequest
 import com.gmail.wizaripost.seedFinder.dto.FreeSpinRequest
 import com.gmail.wizaripost.seedFinder.dto.NewGameRequest
+import com.gmail.wizaripost.seedFinder.dto.RegisterRequest
 import com.gmail.wizaripost.seedFinder.dto.RiskSpinRequest
 import com.gmail.wizaripost.seedFinder.dto.SpinRequest
 import org.springframework.cloud.openfeign.FeignClient
@@ -48,4 +49,12 @@ interface MathClient {
         @PathVariable gameName: String,
         request: CloseRequest
     ): String
+
+    @PostMapping("/{gameName}/jackpot")
+    fun executeRegister(
+        @PathVariable gameName: String,
+        request: RegisterRequest
+    ): String
+
+
 }

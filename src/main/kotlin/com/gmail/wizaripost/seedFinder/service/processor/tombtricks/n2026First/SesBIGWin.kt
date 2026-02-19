@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 * [Tomb Tricks] Ses BIG WIN
 */
 
-//@Service
+@Service
 class SesBIGWin(
     private val om: ObjectMapper,
     private val utils: Utils
